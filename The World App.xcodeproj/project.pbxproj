@@ -1,0 +1,362 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FF40D3DA1DA489B3004EB58B /* AddClockLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF40D3C71DA489B3004EB58B /* AddClockLocationViewController.swift */; };
+		FF40D3DB1DA489B3004EB58B /* AddNewWeatherLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF40D3C81DA489B3004EB58B /* AddNewWeatherLocationViewController.swift */; };
+		FF40D3DC1DA489B3004EB58B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF40D3C91DA489B3004EB58B /* AppDelegate.swift */; };
+		FF40D3DD1DA489B3004EB58B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF40D3CA1DA489B3004EB58B /* Assets.xcassets */; };
+		FF40D3DE1DA489B3004EB58B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF40D3CB1DA489B3004EB58B /* LaunchScreen.storyboard */; };
+		FF40D3DF1DA489B3004EB58B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF40D3CD1DA489B3004EB58B /* Main.storyboard */; };
+		FF40D3E01DA489B3004EB58B /* ClockTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF40D3CF1DA489B3004EB58B /* ClockTableViewCell.swift */; };
+		FF40D3E11DA489B3004EB58B /* CurrencyConverterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF40D3D01DA489B3004EB58B /* CurrencyConverterViewController.swift */; };
+		FF40D3E21DA489B3004EB58B /* CurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF40D3D11DA489B3004EB58B /* CurrencyTableViewCell.swift */; };
+		FF40D3E31DA489B3004EB58B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FF40D3D21DA489B3004EB58B /* Info.plist */; };
+		FF40D3E41DA489B3004EB58B /* TranslationsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF40D3D31DA489B3004EB58B /* TranslationsTableViewCell.swift */; };
+		FF40D3E51DA489B3004EB58B /* TranslatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF40D3D41DA489B3004EB58B /* TranslatorViewController.swift */; };
+		FF40D3E61DA489B3004EB58B /* WeatherTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF40D3D51DA489B3004EB58B /* WeatherTableViewCell.swift */; };
+		FF40D3E71DA489B3004EB58B /* WeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF40D3D61DA489B3004EB58B /* WeatherViewController.swift */; };
+		FF40D3E81DA489B3004EB58B /* World_Traveler_s_App.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FF40D3D71DA489B3004EB58B /* World_Traveler_s_App.xcdatamodeld */; };
+		FF40D3E91DA489B3004EB58B /* WorldClockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF40D3D91DA489B3004EB58B /* WorldClockViewController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		FF40D3C71DA489B3004EB58B /* AddClockLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddClockLocationViewController.swift; sourceTree = "<group>"; };
+		FF40D3C81DA489B3004EB58B /* AddNewWeatherLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddNewWeatherLocationViewController.swift; sourceTree = "<group>"; };
+		FF40D3C91DA489B3004EB58B /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FF40D3CA1DA489B3004EB58B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FF40D3CC1DA489B3004EB58B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		FF40D3CE1DA489B3004EB58B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		FF40D3CF1DA489B3004EB58B /* ClockTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClockTableViewCell.swift; sourceTree = "<group>"; };
+		FF40D3D01DA489B3004EB58B /* CurrencyConverterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyConverterViewController.swift; sourceTree = "<group>"; };
+		FF40D3D11DA489B3004EB58B /* CurrencyTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyTableViewCell.swift; sourceTree = "<group>"; };
+		FF40D3D21DA489B3004EB58B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FF40D3D31DA489B3004EB58B /* TranslationsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TranslationsTableViewCell.swift; sourceTree = "<group>"; };
+		FF40D3D41DA489B3004EB58B /* TranslatorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TranslatorViewController.swift; sourceTree = "<group>"; };
+		FF40D3D51DA489B3004EB58B /* WeatherTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherTableViewCell.swift; sourceTree = "<group>"; };
+		FF40D3D61DA489B3004EB58B /* WeatherViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherViewController.swift; sourceTree = "<group>"; };
+		FF40D3D81DA489B3004EB58B /* World_Traveler_s_App.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = World_Traveler_s_App.xcdatamodel; sourceTree = "<group>"; };
+		FF40D3D91DA489B3004EB58B /* WorldClockViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorldClockViewController.swift; sourceTree = "<group>"; };
+		FFD6A0911D8982FC0084A14F /* The World App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "The World App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FFD6A08E1D8982FC0084A14F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FF40D3C61DA489B3004EB58B /* The World App */ = {
+			isa = PBXGroup;
+			children = (
+				FF40D3C71DA489B3004EB58B /* AddClockLocationViewController.swift */,
+				FF40D3C81DA489B3004EB58B /* AddNewWeatherLocationViewController.swift */,
+				FF40D3C91DA489B3004EB58B /* AppDelegate.swift */,
+				FF40D3CA1DA489B3004EB58B /* Assets.xcassets */,
+				FF40D3CB1DA489B3004EB58B /* LaunchScreen.storyboard */,
+				FF40D3CD1DA489B3004EB58B /* Main.storyboard */,
+				FF40D3CF1DA489B3004EB58B /* ClockTableViewCell.swift */,
+				FF40D3D01DA489B3004EB58B /* CurrencyConverterViewController.swift */,
+				FF40D3D11DA489B3004EB58B /* CurrencyTableViewCell.swift */,
+				FF40D3D21DA489B3004EB58B /* Info.plist */,
+				FF40D3D31DA489B3004EB58B /* TranslationsTableViewCell.swift */,
+				FF40D3D41DA489B3004EB58B /* TranslatorViewController.swift */,
+				FF40D3D51DA489B3004EB58B /* WeatherTableViewCell.swift */,
+				FF40D3D61DA489B3004EB58B /* WeatherViewController.swift */,
+				FF40D3D71DA489B3004EB58B /* World_Traveler_s_App.xcdatamodeld */,
+				FF40D3D91DA489B3004EB58B /* WorldClockViewController.swift */,
+			);
+			path = "The World App";
+			sourceTree = "<group>";
+		};
+		FFD6A0881D8982FC0084A14F = {
+			isa = PBXGroup;
+			children = (
+				FF40D3C61DA489B3004EB58B /* The World App */,
+				FFD6A0921D8982FC0084A14F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FFD6A0921D8982FC0084A14F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FFD6A0911D8982FC0084A14F /* The World App.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FFD6A0901D8982FC0084A14F /* The World App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FFD6A0A61D8982FC0084A14F /* Build configuration list for PBXNativeTarget "The World App" */;
+			buildPhases = (
+				FFD6A08D1D8982FC0084A14F /* Sources */,
+				FFD6A08E1D8982FC0084A14F /* Frameworks */,
+				FFD6A08F1D8982FC0084A14F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "The World App";
+			productName = "World Traveler's App";
+			productReference = FFD6A0911D8982FC0084A14F /* The World App.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FFD6A0891D8982FC0084A14F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0800;
+				LastUpgradeCheck = 0800;
+				ORGANIZATIONNAME = "Kyle Stewart";
+				TargetAttributes = {
+					FFD6A0901D8982FC0084A14F = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = NZE2UWJUNX;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = FFD6A08C1D8982FC0084A14F /* Build configuration list for PBXProject "The World App" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FFD6A0881D8982FC0084A14F;
+			productRefGroup = FFD6A0921D8982FC0084A14F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FFD6A0901D8982FC0084A14F /* The World App */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FFD6A08F1D8982FC0084A14F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FF40D3E31DA489B3004EB58B /* Info.plist in Resources */,
+				FF40D3DF1DA489B3004EB58B /* Main.storyboard in Resources */,
+				FF40D3DD1DA489B3004EB58B /* Assets.xcassets in Resources */,
+				FF40D3DE1DA489B3004EB58B /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FFD6A08D1D8982FC0084A14F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FF40D3E91DA489B3004EB58B /* WorldClockViewController.swift in Sources */,
+				FF40D3E11DA489B3004EB58B /* CurrencyConverterViewController.swift in Sources */,
+				FF40D3E71DA489B3004EB58B /* WeatherViewController.swift in Sources */,
+				FF40D3DC1DA489B3004EB58B /* AppDelegate.swift in Sources */,
+				FF40D3E51DA489B3004EB58B /* TranslatorViewController.swift in Sources */,
+				FF40D3DA1DA489B3004EB58B /* AddClockLocationViewController.swift in Sources */,
+				FF40D3E81DA489B3004EB58B /* World_Traveler_s_App.xcdatamodeld in Sources */,
+				FF40D3E01DA489B3004EB58B /* ClockTableViewCell.swift in Sources */,
+				FF40D3E41DA489B3004EB58B /* TranslationsTableViewCell.swift in Sources */,
+				FF40D3E61DA489B3004EB58B /* WeatherTableViewCell.swift in Sources */,
+				FF40D3E21DA489B3004EB58B /* CurrencyTableViewCell.swift in Sources */,
+				FF40D3DB1DA489B3004EB58B /* AddNewWeatherLocationViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		FF40D3CB1DA489B3004EB58B /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF40D3CC1DA489B3004EB58B /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		FF40D3CD1DA489B3004EB58B /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF40D3CE1DA489B3004EB58B /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		FFD6A0A41D8982FC0084A14F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		FFD6A0A51D8982FC0084A14F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FFD6A0A71D8982FC0084A14F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = NZE2UWJUNX;
+				INFOPLIST_FILE = "The World App/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kylestewart.World-App";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		FFD6A0A81D8982FC0084A14F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = NZE2UWJUNX;
+				INFOPLIST_FILE = "The World App/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kylestewart.World-App";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FFD6A08C1D8982FC0084A14F /* Build configuration list for PBXProject "The World App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FFD6A0A41D8982FC0084A14F /* Debug */,
+				FFD6A0A51D8982FC0084A14F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FFD6A0A61D8982FC0084A14F /* Build configuration list for PBXNativeTarget "The World App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FFD6A0A71D8982FC0084A14F /* Debug */,
+				FFD6A0A81D8982FC0084A14F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		FF40D3D71DA489B3004EB58B /* World_Traveler_s_App.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				FF40D3D81DA489B3004EB58B /* World_Traveler_s_App.xcdatamodel */,
+			);
+			currentVersion = FF40D3D81DA489B3004EB58B /* World_Traveler_s_App.xcdatamodel */;
+			path = World_Traveler_s_App.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = FFD6A0891D8982FC0084A14F /* Project object */;
+}

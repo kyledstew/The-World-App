@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11232" systemVersion="15G1004" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Clock" syncable="YES">
+        <attribute name="active" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="country_code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="country_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gmt_offset" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="location_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="zone_name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Currency_Conversions" syncable="YES">
+        <attribute name="source_amount" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="source_currency" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="target_amount" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="target_currency" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
+    <entity name="Currency_List" syncable="YES">
+        <attribute name="abbreviation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="active" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="currency" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Languages_List" syncable="YES">
+        <attribute name="language_abbr" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="language_name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Translations" syncable="YES">
+        <attribute name="source_language" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="target_language" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="text_to_translate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="translated_text" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Weather" syncable="YES">
+        <attribute name="current_temp" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="humidity" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="icon" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lat" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="location_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lon" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="temp_max" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="temp_min" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="weather_description" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Clock" positionX="-54" positionY="54" width="128" height="150"/>
+        <element name="Currency_Conversions" positionX="-54" positionY="72" width="128" height="120"/>
+        <element name="Currency_List" positionX="-54" positionY="72" width="128" height="90"/>
+        <element name="Languages_List" positionX="-54" positionY="72" width="128" height="75"/>
+        <element name="Weather" positionX="-54" positionY="-9" width="128" height="180"/>
+        <element name="Translations" positionX="-54" positionY="72" width="128" height="30"/>
+    </elements>
+</model>
