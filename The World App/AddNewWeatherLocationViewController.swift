@@ -81,7 +81,10 @@ class AddNewWeatherLocationViewController: UIViewController {
                         
                         if !self.dataExists(locationName: (locationName)) {
                            
-                           if locationName == self.locationInput.text!.capitalized { // Sometimes the result is different then what we searched. Make sure it's the same!
+                           if locationName == self.locationInput.text!.capitalized ||
+                              locationName + " " == self.locationInput.text!.capitalized
+                           
+                           { // Sometimes the result is different then what we searched. Make sure it's the same!
                               
                               if let lon = jsonResult["coord"]?["lon"] as? Double {
                                  

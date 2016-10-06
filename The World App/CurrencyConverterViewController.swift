@@ -292,7 +292,6 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
       } else { // If first time using, set source default to USD
          
          fromPicker.selectRow(Array(currencies.keys).sorted().index(of: "USD")!, inComponent: 0, animated: true)
-         print(Array(currencies.keys).sorted().index(of: "USD")!)
          
       }
       
@@ -317,12 +316,10 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
       if sourceCurrency {
          
          UserDefaults.standard.set(currency, forKey: "sourceCurrency")
-         print("Saved source currency as " + currency)
          
       } else {
          
          UserDefaults.standard.set(currency, forKey: "targetCurrency")
-         print("Saved target currency as " + currency)
          
       }
    }
@@ -399,7 +396,6 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
          do {
             try context.save()
             isSuccess = true
-            print("Saved " + abbreviation + " " + currency)
             numberOfCurrencies += 1
             
          } catch {
@@ -438,8 +434,6 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
                if let abbreviation = result.value(forKey: "abbreviation") as? String {
                   
                   if let currency = result.value(forKey: "currency") as? String {
-                     
-                     print("Loaded " + abbreviation + " " + currency)
                      
                      currencies[abbreviation] = currency
                      

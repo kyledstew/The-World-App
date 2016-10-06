@@ -35,8 +35,6 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
    @IBOutlet var addClockPrompt: UILabel!
    @IBOutlet var addLocationButton: UIBarButtonItem!
    
-   
-   
    // VIEW DID LOAD //
    override func viewDidLoad() {
       super.viewDidLoad()
@@ -116,9 +114,16 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
                      
                      if let zoneName = result.value(forKey: "zone_name") as? String {
                         
+                        if zoneName == "Pacific/Pago_Pago" {
+                           
+                           print(zoneName + " \(gmtOffset)")
+                           
+                        }
+                        
                         if clocks[locationName] == nil { // If nil, it's new
                            
                            let temp = GmtOffset(countryCode: nil, countryName: nil, gmtOffset: gmtOffset, zoneName: zoneName, timestamp: nil, updated: true)
+                           
                            self.clocks[locationName] = temp
                            checkGmtOffset(locationName: locationName, gmtOffset: gmtOffset, zoneName: zoneName)
                            
@@ -173,6 +178,8 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
                   let jsonResult = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String: AnyObject]
                   
                   if let currentGmtOffset = jsonResult["gmtOffset"] as? Int {
+                     
+                     print("Current \(currentGmtOffset)")
                      
                      let temp = GmtOffset(countryCode: nil, countryName: nil, gmtOffset: gmtOffset, zoneName: zoneName, timestamp: nil, updated: true)
                      self.clocks[locationName] = temp
@@ -348,6 +355,12 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
                                     
                                     if let timestamp = timeZones["timestamp"] as? Int {
                                        
+                                       if zoneName == "Pacific/Pago_Pago" {
+                                          
+                                          print(zoneName + " \(gmtOffset)")
+                                          
+                                       }
+                                       
                                        let temp = GmtOffset(countryCode: countryCode, countryName: countryName, gmtOffset: gmtOffset, zoneName: zoneName, timestamp: timestamp, updated: true)
                                        tempClocks[self.getLocationName(zoneName: zoneName)] = temp
                                        
@@ -376,6 +389,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
                } catch {
                   
                   print("error processing data")
+                  self.getTimeZoneInfo()
                   
                }
                
@@ -410,6 +424,12 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
          data.setValue(info.timestamp, forKey: "timestamp")
          data.setValue(locationName, forKey: "location_name")
          data.setValue(false, forKey: "active")
+         
+         if info.zoneName == "Pacific/Pago_Pago" {
+            
+            print(info.zoneName! + " \(info.gmtOffset)")
+            
+         }
          
          do {
             
@@ -541,6 +561,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       let dateFormatter = DateFormatter()
       dateFormatter.timeZone = NSTimeZone(forSecondsFromGMT: gmtOffset) as TimeZone!
       dateFormatter.timeStyle = .short
+      dateFormatter.locale = NSLocale(localeIdentifier: "en-US") as Locale!
       dateFormatter.dateStyle = DateFormatter.Style.medium
       
       let dateTimeString = dateFormatter.string(from: date as Date)
