@@ -64,9 +64,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
    
    // VIEWDIDAPPEAR //
    override func viewDidAppear(_ animated: Bool) {
-      
-      print("APPEARED")
-      
+
       if !firstTime {
          
          loadClocks()
@@ -378,9 +376,10 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
                      
                      DispatchQueue.main.sync(execute: {
                         
-                        self.saveToCoreData(tempClocks: tempClocks)
-                        self.firstTime = false
-                        UserDefaults.standard.set(self.firstTime, forKey: "firstTimeLoadingClock")
+                        if self.saveToCoreData(tempClocks: tempClocks) {
+                           self.firstTime = false
+                           UserDefaults.standard.set(self.firstTime, forKey: "firstTimeLoadingClock")
+                        }
                         
                      })
                      
@@ -435,7 +434,6 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
             
             try context.save()
             isSuccess = true
-            print("Saved " + locationName)
             numberOfTimeZones += 1
             
          } catch {

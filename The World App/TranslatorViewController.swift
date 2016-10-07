@@ -43,9 +43,11 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
       
       sourceLanguageSelected = true
       
-      languagePicker.selectRow(Array(languages.keys).sorted().index(of: sourceLanguageButton.titleLabel!.text!)!, inComponent: 0, animated: false)
-      selectLanguageView.isHidden = false
-      selectLanguagePrompt.text = "Select Source Language"
+      if languages.count > 0 {
+         languagePicker.selectRow(Array(languages.keys).sorted().index(of: sourceLanguageButton.titleLabel!.text!)!, inComponent: 0, animated: false)
+         selectLanguageView.isHidden = false
+         selectLanguagePrompt.text = "Select Source Language"
+      }
       
    }
    
@@ -53,9 +55,11 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
       
       sourceLanguageSelected = false
       
-      languagePicker.selectRow(Array(languages.keys).sorted().index(of: targetLanguageButton.titleLabel!.text!)!, inComponent: 0, animated: false)
-      selectLanguagePrompt.text = "Select Target Language"
-      selectLanguageView.isHidden = false
+      if languages.count > 0 {
+         languagePicker.selectRow(Array(languages.keys).sorted().index(of: targetLanguageButton.titleLabel!.text!)!, inComponent: 0, animated: false)
+         selectLanguagePrompt.text = "Select Target Language"
+         selectLanguageView.isHidden = false
+      }
       
    }
    
@@ -116,6 +120,7 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
    override func viewDidLoad() {
       super.viewDidLoad()
       
+      
       if (UserDefaults.standard.object(forKey: "firstTimeLoadingLanguages") as? Bool) == nil {
          
          translationLoader.startAnimating()
@@ -124,7 +129,7 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
       } else {
          
          loadLanguageList()
-         loadTranslations()
+         //loadTranslations()
          
       }
       
@@ -184,7 +189,7 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
    /***************************************************************/
    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
       
-      return translations.count
+      return  translations.count
       
    }
    
@@ -200,7 +205,7 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
       cell.targetLanguageLabel.text = current?.targetLanguage
       cell.textToTranslateLabel.text = current?.textToTranslate
       cell.translatedTextLabel.text = current?.translatedText
-      
+ 
       return cell
       
    }
@@ -259,7 +264,7 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
                   var numberOfLanguages = 0
                   
                   let jsonResult = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String: AnyObject]
-                  
+ 
                   if let temp = jsonResult["data"]?["languages"] as? [[String: String]]
                   {
                      
@@ -269,13 +274,8 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
                            
                            if let languageName = data["name"] {
                               
-                              print(languageAbbr + " " + languageName)
-                              
-                              if self.saveToCoreData(languageAbbr: languageAbbr, languageName: languageName) {
-                                 
-                                 numberOfLanguages += 1
-                                 
-                              }
+                              self.languages[languageAbbr] = languageName
+                              numberOfLanguages += 1
                               
                            }
                            
@@ -286,9 +286,10 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
                      DispatchQueue.main.sync(execute: {
                         
                         print("\(numberOfLanguages) languages saved")
-                        self.firstTime = false
-                        UserDefaults.standard.set(self.firstTime, forKey: "firstTimeLoadingLanguages")
-                        self.loadLanguageList()
+                        if self.saveToCoreData() {
+                           self.firstTime = false
+                           UserDefaults.standard.set(self.firstTime, forKey: "firstTimeLoadingLanguages")
+                        }
                         
                      })
                      
@@ -312,26 +313,34 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
    }
    
    // SAVE LIST OF LANGUAGES TO CORE DATA //
-   func saveToCoreData(languageAbbr: String, languageName: String) -> Bool {
+   func saveToCoreData() -> Bool {
       
       var isSuccess = false
       
-      let appDelegate = UIApplication.shared.delegate as! AppDelegate
-      let context = appDelegate.persistentContainer.viewContext
-      let data = NSEntityDescription.insertNewObject(forEntityName: "Languages_List", into: context)
+      var numberOfLanguages = 0
       
-      data.setValue(languageAbbr, forKey: "language_abbr")
-      data.setValue(languageName, forKey: "language_name")
+      for (languageAbbr, languageName) in languages {
       
-      do {
-         try context.save()
-         isSuccess = true
+         let appDelegate = UIApplication.shared.delegate as! AppDelegate
+         let context = appDelegate.persistentContainer.viewContext
+         let data = NSEntityDescription.insertNewObject(forEntityName: "Languages_List", into: context)
+      
+      
+         data.setValue(languageAbbr, forKey: "language_abbr")
+         data.setValue(languageName, forKey: "language_name")
+      
+         do {
+            try context.save()
+            isSuccess = true
+            numberOfLanguages += 1
          
-      } catch {
+         } catch {
          
-         print("There was an error " + languageName)
+            print("There was an error " + languageName)
          
+         }
       }
+      loadLanguageList()
       
       return isSuccess
       
@@ -353,18 +362,13 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
          if results.count > 0 {
             
             for result in results as! [NSManagedObject] {
-               
-               if let languageAbbr = result.value(forKey: "language_abbr") as? String {
+               guard let languageAbbr = result.value(forKey: "language_abbr") as? String,
+                     let languageName = result.value(forKey: "language_name") as? String
                   
-                  if let languageName = result.value(forKey: "language_name") as? String {
-                     
-                     languages[languageName] = languageAbbr
-                     
-                  }
-                  
-               }
+                  else { continue }
                
-            }
+             languages[languageName] = languageAbbr
+             }
             
             
          }
@@ -399,29 +403,17 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
             
             for result in results as! [NSManagedObject] {
                
-               if let timestamp = result.value(forKey: "timestamp") as? Int {
-                  
-                  if let sourceLanguage = result.value(forKey: "source_language") as? String {
-                     
-                     if let targetLanguage = result.value(forKey: "target_language") as? String {
-                        
-                        if let textToTranslate = result.value(forKey: "text_to_translate") as? String {
-                           
-                           if let translatedText = result.value(forKey: "translated_text") as? String {
+               guard let timestamp = result.value(forKey: "timestamp") as? Int,
+                  let sourceLanguage = result.value(forKey: "source_language") as? String,
+                  let targetLanguage = result.value(forKey: "target_language") as? String,
+                  let textToTranslate = result.value(forKey: "text_to_translate") as? String,
+                  let translatedText = result.value(forKey: "translated_text") as? String
+               
+                  else { continue }
+               
+                  let temp = TranslationInfo(sourceLanguage: sourceLanguage, targetLanguage: targetLanguage, textToTranslate: textToTranslate, translatedText: translatedText)
                               
-                              let temp = TranslationInfo(sourceLanguage: sourceLanguage, targetLanguage: targetLanguage, textToTranslate: textToTranslate, translatedText: translatedText)
-                              
-                              translations[timestamp] = temp
-                              
-                           }
-                           
-                        }
-                        
-                     }
-                     
-                  }
-                  
-               }
+                  translations[timestamp] = temp
                
             }
             
@@ -522,7 +514,7 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
          
          try context.save()
          print("Saved")
-         loadTranslations()
+         //loadTranslations()
          isSuccess = true
          
       } catch {

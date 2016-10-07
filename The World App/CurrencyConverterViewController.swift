@@ -341,6 +341,8 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
                
                do {
                   
+                  var numberOfCurrencies = 0
+                  
                   let jsonResult = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String: AnyObject]
                   
                   let currenciesArray = jsonResult["currencies"] as! [String: String]
@@ -348,15 +350,18 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
                   for (abbreviation, currency) in currenciesArray {
                      
                      self.currencies[abbreviation] = currency
+                     numberOfCurrencies += 1
                      
                   }
                   
                   
                   DispatchQueue.main.sync(execute: {
                      
-                     self.saveToCoreData()
-                     self.firstTime = false
-                     UserDefaults.standard.set(self.firstTime, forKey: "firstTimeLoadingCurrencies")
+                     print("\(numberOfCurrencies) currencies saved")
+                     if self.saveToCoreData() {
+                        self.firstTime = false
+                        UserDefaults.standard.set(self.firstTime, forKey: "firstTimeLoadingCurrencies")
+                     }
                      
                   })
                   
@@ -415,8 +420,6 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
    // LOAD ALL THE CURRENCIES FROM CORE DATA //
    func loadCurrencyList() {
       
-      print("Loading data")
-      
       let appDelegate = UIApplication.shared.delegate as! AppDelegate
       let context = appDelegate.persistentContainer.viewContext
       let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Currency_List")
@@ -430,21 +433,17 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
          if results.count > 0 {
             
             for result in results as! [NSManagedObject] {
-               
-               if let abbreviation = result.value(forKey: "abbreviation") as? String {
+               guard let abbreviation = result.value(forKey: "abbreviation") as? String,
+                  let currency = result.value(forKey: "currency") as? String
                   
-                  if let currency = result.value(forKey: "currency") as? String {
-                     
-                     currencies[abbreviation] = currency
-                     
-                  }
-                  
-               }
+                  else {continue}
                
+               currencies[abbreviation] = currency
+      
             }
             
-            
          }
+ 
          
       } catch {
          
@@ -488,34 +487,24 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
             
             for result in results as! [NSManagedObject] {
                
-               if let timestamp = result.value(forKey: "timestamp") as? Int {
+               guard let timestamp = result.value(forKey: "timestamp") as? Int,
+                  let sourceAmount = result.value(forKey: "source_amount") as? Double,
+                  let sourceCurrency = result.value(forKey: "source_currency") as? String,
+                  let targetAmount = result.value(forKey: "target_amount") as? Double,
+                  let targetCurrency = result.value(forKey: "target_currency") as? String
                   
-                  if let sourceAmount = result.value(forKey: "source_amount") as? Double {
-                     
-                     if let sourceCurrency = result.value(forKey: "source_currency") as? String {
-                        
-                        if let targetAmount = result.value(forKey: "target_amount") as? Double {
-                           
-                           if let targetCurrency = result.value(forKey: "target_currency") as? String {
-                              
-                              let temp = ConversionInfo(sourceAmount: sourceAmount, sourceCurrency: sourceCurrency, targetAmount: targetAmount, targetCurrency: targetCurrency)
-                              
-                              conversions[timestamp] = temp
-                              
-                           }
-                           
-                        }
-                        
-                     }
-                     
-                  }
-                  
-               }
+                  else {continue}
+               
+               let temp = ConversionInfo(sourceAmount: sourceAmount, sourceCurrency: sourceCurrency, targetAmount: targetAmount, targetCurrency: targetCurrency)
+               
+               conversions[timestamp] = temp
+               
+               
             }
             
             conversionsTable.reloadData()
-            
          }
+         
          
       } catch {
          
