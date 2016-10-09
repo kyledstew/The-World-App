@@ -55,6 +55,8 @@ class WeatherViewController: UIViewController, UITableViewDataSource, UITableVie
       swipeDown.direction = UISwipeGestureRecognizerDirection.down
       self.view.addGestureRecognizer(swipeDown)
       
+      NotificationCenter.default.addObserver(self, selector: #selector(WeatherViewController.loadData),name:NSNotification.Name(rawValue: "reloadWeatherTable"), object: nil)
+      
    }
    
    override func didReceiveMemoryWarning() {
@@ -127,6 +129,7 @@ class WeatherViewController: UIViewController, UITableViewDataSource, UITableVie
          if locationWeatherInfo.count == 0 {
             
             addLocationPrompt.isHidden = false
+            dataUpdatedNotice.isHidden = true
             
          }
          
@@ -150,6 +153,8 @@ class WeatherViewController: UIViewController, UITableViewDataSource, UITableVie
          let results = try context.fetch(request)
          
          if results.count > 0 {
+            
+            addLocationPrompt.isHidden = true
             
             for result in results as! [NSManagedObject] {
                
@@ -247,6 +252,8 @@ class WeatherViewController: UIViewController, UITableViewDataSource, UITableVie
    // REFRESH WEATHER DATA //
    func refreshData() {
       
+      print("TEST")
+      
       if locationWeatherInfo.count > 0 {
          
          loader.startAnimating()
@@ -286,6 +293,7 @@ class WeatherViewController: UIViewController, UITableViewDataSource, UITableVie
             
          }
       }
+      table.reloadData()
       
    }
    

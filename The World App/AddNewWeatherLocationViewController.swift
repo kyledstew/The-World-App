@@ -140,7 +140,9 @@ class AddNewWeatherLocationViewController: UIViewController {
                                        }
                                        
                                        DispatchQueue.main.sync(execute: {
+                                          NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadWeatherTable"), object: nil)
                                           self.dismiss(animated: true, completion: nil)
+                                          
                                        })
                                        
                                     }

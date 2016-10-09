@@ -129,7 +129,7 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
       } else {
          
          loadLanguageList()
-         //loadTranslations()
+         loadTranslations()
          
       }
       
@@ -514,7 +514,7 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
          
          try context.save()
          print("Saved")
-         //loadTranslations()
+         loadTranslations()
          isSuccess = true
          
       } catch {

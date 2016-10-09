@@ -169,6 +169,7 @@ class AddClockLocationViewController: UIViewController, UIPickerViewDelegate, UI
                   
                   print("Saved")
                   
+                  NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadClocksTable"), object: nil)
                   self.dismiss(animated: true, completion: nil)
                   
                } catch {

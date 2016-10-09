@@ -60,6 +60,8 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       // Update the time every second
       timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(WorldClockViewController.updateTime), userInfo: nil, repeats: true)
       
+      NotificationCenter.default.addObserver(self, selector: #selector(WorldClockViewController.loadClocks),name:NSNotification.Name(rawValue: "reloadClocksTable"), object: nil)
+      
    }
    
    // VIEWDIDAPPEAR //
@@ -103,6 +105,8 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
          let results = try context.fetch(request)
          
          if results.count > 0 {
+            
+            addClockPrompt.isHidden = true
             
             for result in results as! [NSManagedObject] {
                
