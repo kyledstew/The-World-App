@@ -32,7 +32,7 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
    @IBOutlet var textToTranslate: UITextView!
    @IBOutlet var translationLoader: UIActivityIndicatorView!
    @IBOutlet var translationsTable: UITableView!
-   // Views
+   // UI VIEWS
    @IBOutlet var sourceTargetLanguageView: UIView!
    @IBOutlet var textToTranslateView: UIView!
    @IBOutlet var selectLanguageView: UIView!

@@ -23,6 +23,11 @@
 		FF21F5171DA81B1C0064EB90 /* WeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF21F5051DA81B1C0064EB90 /* WeatherViewController.swift */; };
 		FF21F5181DA81B1C0064EB90 /* World_Traveler_s_App.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FF21F5061DA81B1C0064EB90 /* World_Traveler_s_App.xcdatamodeld */; };
 		FF21F5191DA81B1C0064EB90 /* WorldClockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF21F5081DA81B1C0064EB90 /* WorldClockViewController.swift */; };
+		FF5435BA1DB3AE3200E28153 /* SelectCurrencyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5435B91DB3AE3200E28153 /* SelectCurrencyViewController.swift */; };
+		FF67A3B31DB772CD00ABC326 /* CurrencySelectorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF67A3B21DB772CD00ABC326 /* CurrencySelectorTableViewCell.swift */; };
+		FF9F099C1DB8FB6300A54028 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9F099B1DB8FB6300A54028 /* Section.swift */; };
+		FFAE2D9A1DB6462B001C1FA1 /* BlurVisualEffectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFAE2D991DB6462B001C1FA1 /* BlurVisualEffectViewController.swift */; };
+		FFCEF3D61DB7C4440068513B /* SectionsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCEF3D51DB7C4440068513B /* SectionsData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +48,11 @@
 		FF21F5051DA81B1C0064EB90 /* WeatherViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherViewController.swift; sourceTree = "<group>"; };
 		FF21F5071DA81B1C0064EB90 /* World_Traveler_s_App.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = World_Traveler_s_App.xcdatamodel; sourceTree = "<group>"; };
 		FF21F5081DA81B1C0064EB90 /* WorldClockViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorldClockViewController.swift; sourceTree = "<group>"; };
+		FF5435B91DB3AE3200E28153 /* SelectCurrencyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectCurrencyViewController.swift; sourceTree = "<group>"; };
+		FF67A3B21DB772CD00ABC326 /* CurrencySelectorTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelectorTableViewCell.swift; sourceTree = "<group>"; };
+		FF9F099B1DB8FB6300A54028 /* Section.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
+		FFAE2D991DB6462B001C1FA1 /* BlurVisualEffectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurVisualEffectViewController.swift; sourceTree = "<group>"; };
+		FFCEF3D51DB7C4440068513B /* SectionsData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionsData.swift; sourceTree = "<group>"; };
 		FFD6A0911D8982FC0084A14F /* The World App.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "The World App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -69,24 +79,61 @@
 		FF40D3C61DA489B3004EB58B /* The World App */ = {
 			isa = PBXGroup;
 			children = (
-				FF21F4F41DA81B1C0064EB90 /* AddClockLocationViewController.swift */,
-				FF21F4F51DA81B1C0064EB90 /* AddNewWeatherLocationViewController.swift */,
-				FF21F4F61DA81B1C0064EB90 /* AppDelegate.swift */,
-				FF21F4F71DA81B1C0064EB90 /* Assets.xcassets */,
+				FFACA5BE1DB34ACA00B65E84 /* World Clock */,
+				FFACA5BF1DB34ADB00B65E84 /* Weather */,
 				FF21F4F81DA81B1C0064EB90 /* Base.lproj */,
-				FF21F4FD1DA81B1C0064EB90 /* ClockTableViewCell.swift */,
-				FF21F4FE1DA81B1C0064EB90 /* CurrencyConverterViewController.swift */,
-				FF21F4FF1DA81B1C0064EB90 /* CurrencyTableViewCell.swift */,
-				FF21F5001DA81B1C0064EB90 /* DictionaryInfoViewController.swift */,
+				FFACA5C01DB34AF500B65E84 /* Currency */,
+				FFACA5BD1DB34A9900B65E84 /* Translator */,
 				FF21F5011DA81B1C0064EB90 /* Info.plist */,
-				FF21F5021DA81B1C0064EB90 /* TranslationsTableViewCell.swift */,
-				FF21F5031DA81B1C0064EB90 /* TranslatorViewController.swift */,
-				FF21F5041DA81B1C0064EB90 /* WeatherTableViewCell.swift */,
-				FF21F5051DA81B1C0064EB90 /* WeatherViewController.swift */,
+				FF21F4F71DA81B1C0064EB90 /* Assets.xcassets */,
+				FFAE2D991DB6462B001C1FA1 /* BlurVisualEffectViewController.swift */,
+				FF21F4F61DA81B1C0064EB90 /* AppDelegate.swift */,
 				FF21F5061DA81B1C0064EB90 /* World_Traveler_s_App.xcdatamodeld */,
-				FF21F5081DA81B1C0064EB90 /* WorldClockViewController.swift */,
 			);
 			path = "The World App";
+			sourceTree = "<group>";
+		};
+		FFACA5BD1DB34A9900B65E84 /* Translator */ = {
+			isa = PBXGroup;
+			children = (
+				FF21F5031DA81B1C0064EB90 /* TranslatorViewController.swift */,
+				FF21F5001DA81B1C0064EB90 /* DictionaryInfoViewController.swift */,
+				FF21F5021DA81B1C0064EB90 /* TranslationsTableViewCell.swift */,
+			);
+			name = Translator;
+			sourceTree = "<group>";
+		};
+		FFACA5BE1DB34ACA00B65E84 /* World Clock */ = {
+			isa = PBXGroup;
+			children = (
+				FF21F4F41DA81B1C0064EB90 /* AddClockLocationViewController.swift */,
+				FF21F4FD1DA81B1C0064EB90 /* ClockTableViewCell.swift */,
+				FF21F5081DA81B1C0064EB90 /* WorldClockViewController.swift */,
+			);
+			name = "World Clock";
+			sourceTree = "<group>";
+		};
+		FFACA5BF1DB34ADB00B65E84 /* Weather */ = {
+			isa = PBXGroup;
+			children = (
+				FF21F5041DA81B1C0064EB90 /* WeatherTableViewCell.swift */,
+				FF21F5051DA81B1C0064EB90 /* WeatherViewController.swift */,
+				FF21F4F51DA81B1C0064EB90 /* AddNewWeatherLocationViewController.swift */,
+			);
+			name = Weather;
+			sourceTree = "<group>";
+		};
+		FFACA5C01DB34AF500B65E84 /* Currency */ = {
+			isa = PBXGroup;
+			children = (
+				FF21F4FE1DA81B1C0064EB90 /* CurrencyConverterViewController.swift */,
+				FF21F4FF1DA81B1C0064EB90 /* CurrencyTableViewCell.swift */,
+				FF5435B91DB3AE3200E28153 /* SelectCurrencyViewController.swift */,
+				FF67A3B21DB772CD00ABC326 /* CurrencySelectorTableViewCell.swift */,
+				FFCEF3D51DB7C4440068513B /* SectionsData.swift */,
+				FF9F099B1DB8FB6300A54028 /* Section.swift */,
+			);
+			name = Currency;
 			sourceTree = "<group>";
 		};
 		FFD6A0881D8982FC0084A14F = {
@@ -184,12 +231,17 @@
 				FF21F5101DA81B1C0064EB90 /* CurrencyConverterViewController.swift in Sources */,
 				FF21F50B1DA81B1C0064EB90 /* AppDelegate.swift in Sources */,
 				FF21F5091DA81B1C0064EB90 /* AddClockLocationViewController.swift in Sources */,
+				FF67A3B31DB772CD00ABC326 /* CurrencySelectorTableViewCell.swift in Sources */,
 				FF21F5181DA81B1C0064EB90 /* World_Traveler_s_App.xcdatamodeld in Sources */,
 				FF21F50F1DA81B1C0064EB90 /* ClockTableViewCell.swift in Sources */,
 				FF21F5151DA81B1C0064EB90 /* TranslatorViewController.swift in Sources */,
+				FF9F099C1DB8FB6300A54028 /* Section.swift in Sources */,
 				FF21F5111DA81B1C0064EB90 /* CurrencyTableViewCell.swift in Sources */,
+				FFCEF3D61DB7C4440068513B /* SectionsData.swift in Sources */,
 				FF21F50A1DA81B1C0064EB90 /* AddNewWeatherLocationViewController.swift in Sources */,
 				FF21F5191DA81B1C0064EB90 /* WorldClockViewController.swift in Sources */,
+				FFAE2D9A1DB6462B001C1FA1 /* BlurVisualEffectViewController.swift in Sources */,
+				FF5435BA1DB3AE3200E28153 /* SelectCurrencyViewController.swift in Sources */,
 				FF21F5141DA81B1C0064EB90 /* TranslationsTableViewCell.swift in Sources */,
 				FF21F5171DA81B1C0064EB90 /* WeatherViewController.swift in Sources */,
 			);

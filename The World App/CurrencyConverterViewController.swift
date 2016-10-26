@@ -9,13 +9,13 @@
 import UIKit
 import CoreData
 
-class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITableViewDelegate, UITableViewDataSource {
+class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
    
    // VARIABLES //
-   var baseCurrency = "USD"
-   var firstTime = true
+   var isFirstTime = true
    let key = "a813f08491bba38f9ed22bf31c3ecd54"
    var currencies = [String: String] ()
+   var sourceCurrencySelected = true
    struct ConversionInfo {
       
       var sourceAmount: Double?
@@ -26,94 +26,87 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
    }
    var conversions = [Int: ConversionInfo] ()
    var isSourceCurrency = true // keep track of which currency changed
+   var blurredScreen = BlurVisualEffectViewController()
    
-   //UI ITEMS //
-   @IBOutlet var fromPicker: UIPickerView!
-   @IBOutlet var toPicker: UIPickerView!
-   @IBOutlet var fromCurrencyButton: UIButton!
+   // UI ITEMS //
+   @IBOutlet var sourceCurrencyButton: UIButton!
+   @IBOutlet var targetCurrencyButton: UIButton!
    @IBOutlet var loader: UIActivityIndicatorView!
-   @IBOutlet var switcher: UIButton!
-   @IBOutlet var toCurrencyButton: UIButton!
+   @IBOutlet var switchButton: UIButton!
    @IBOutlet var targetAmountLoader: UIActivityIndicatorView!
-   @IBOutlet var fromAmount: UITextField!
+   @IBOutlet var sourceAmount: UITextField!
+   @IBOutlet var targetAmount: UITextField!
    @IBOutlet var toArrow: UIButton!
-   @IBOutlet var toAmount: UITextField!
-   @IBOutlet var questionButton: UIButton!
    @IBOutlet var clickSaveConversionPrompt: UIView!
-   @IBOutlet var clickCurrencyPrompt: UILabel!
    @IBOutlet var conversionsTable: UITableView!
    
+   // UI VIEWS //
+   @IBOutlet var currencyConversionView: UIView!
+   @IBOutlet var loaderView: UIView!
+   
+   public func isSourceCurrencySelected() -> Bool {
+      
+      return sourceCurrencySelected
+      
+   }
+   
    // UI ITEM FUNCS //
-   @IBAction func fromCurrencyButton(_ sender: AnyObject) {
+   @IBAction func sourceCurrencyButtonPressed(_ sender: AnyObject) {
       
-      fromCurrencyButton.isHidden = true
-      fromPicker.isHidden = false
-      fromAmount.isHidden = true
-      questionButton.isHidden = true
-      clickCurrencyPrompt.isHidden = true
+      sourceCurrencySelected = true
+      blurredScreen.enableBlur(temp: self)
+      
       
    }
    
-   @IBAction func toCurrencyButton(_ sender: AnyObject) {
+   func resetConversionPage() {
       
-      isSourceCurrency = false
-      toCurrencyButton.isHidden = true
-      toPicker.isHidden = false
-      toAmount.isHidden = true
+      blurredScreen.disableBlur(temp: self)
+      loadSelectedCurrencySettings()
       
    }
    
-   @IBAction func switchButton(_ sender: AnyObject) {
+   @IBAction func targetCurrencyButtonPressed(_ sender: AnyObject) {
       
-      let fpv = fromPicker.selectedRow(inComponent: 0)
-      let tpv = toPicker.selectedRow(inComponent: 0)
+      sourceCurrencySelected = false
+      blurredScreen.enableBlur(temp: self)
       
-      fromPicker.selectRow(tpv, inComponent: 0, animated: true)
-      toPicker.selectRow(fpv, inComponent: 0, animated: true)
+   }
+   
+   @IBAction func switchButtonPressed(_ sender: AnyObject) {
       
-      fromCurrencyButton.setTitle(Array(currencies.keys).sorted()[tpv], for: .normal)
-      toCurrencyButton.setTitle(Array(currencies.keys).sorted()[fpv], for: .normal)
+      let newTargetCurrency = sourceCurrencyButton.titleLabel?.text
+      let newSourceCurrency = targetCurrencyButton.titleLabel?.text
       
-      saveSelectedCurrencySettings(currency: Array(currencies.keys).sorted()[tpv])
-      saveSelectedCurrencySettings(currency: Array(currencies.keys).sorted()[fpv], sourceCurrency: false)
+      sourceCurrencyButton.setTitle(newSourceCurrency, for: .normal)
+      targetCurrencyButton.setTitle(newTargetCurrency, for: .normal)
       
-      if fromAmount.text != "" && Double(fromAmount.text!) != nil {
+      saveSelectedCurrencySettings(newSourceCurrency:  newSourceCurrency!, newTargetCurrency: newTargetCurrency!)
       
-      toAmount.text = ""
-      getExchangeRate()
-      
+      if sourceAmount.text != "" && Double(sourceAmount.text!) != nil {
+         
+         targetAmount.text = ""
+         getExchangeRate()
+         
       }
    }
    
-   @IBAction func questionButton(_ sender: AnyObject) {
+   @IBAction func sourceAmountValueChanged(_ sender: AnyObject) {
       
-      if clickCurrencyPrompt.isHidden {
+      if sourceAmount.text == "" {
          
-         clickCurrencyPrompt.isHidden = false
+         targetAmount.text = ""
          
-      } else {
+      } else if Double(sourceAmount.text!) != nil {
          
-         clickCurrencyPrompt.isHidden = true
-         
-      }
-      
-   }
-   
-   @IBAction func fromAmountValueChanged(_ sender: AnyObject) {
-      
-      if fromAmount.text == "" {
-         
-         toAmount.text = ""
-         
-      } else if Double(fromAmount.text!) != nil {
-         
+         targetAmountLoader.startAnimating()
          getExchangeRate()
          
          
       } else {
          
          print("Not double....")
-         toAmount.text = ""
+         targetAmount.text = ""
          
       }
       
@@ -121,16 +114,32 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
    
    @IBAction func saveConversion(_ sender: AnyObject) {
       
-      if fromAmount.text != "" && Double(fromAmount.text!) != nil {
+      if sourceAmount.text != "" && Double(sourceAmount.text!) != nil {
          
-         var curArray = Array(currencies.keys).sorted()
-         
-         if saveConversion(sourceAmount: Double(fromAmount.text!)!, sourceCurrency: curArray[fromPicker.selectedRow(inComponent: 0)], targetAmount: Double(toAmount.text!)!, targetCurrency: curArray[toPicker.selectedRow(inComponent: 0)]) {
+         if saveConversion(sourceAmount: Double(sourceAmount.text!)!, sourceCurrency: sourceCurrencyButton.currentTitle!, targetAmount: Double(targetAmount.text!)!, targetCurrency: targetCurrencyButton.currentTitle!) {
             
             print("Saved Successfully")
             
          }
+      }
+      
+   }
+   
+   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+      if segue.identifier == "toTargetCurrencySelector" {
+
+         let selectCurrencyViewController = segue.destination as! SelectCurrencyViewController
          
+         selectCurrencyViewController.isSourceCurrency = false
+         selectCurrencyViewController.selectedCurrency = targetCurrencyButton.currentTitle!
+         
+      } else if segue.identifier == "toSourceCurrencySelector" {
+         
+         let selectCurrencyViewController = segue.destination as! SelectCurrencyViewController
+         
+         selectCurrencyViewController.isSourceCurrency = true
+         selectCurrencyViewController.selectedCurrency = sourceCurrencyButton.currentTitle!
+
       }
       
    }
@@ -139,17 +148,22 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
    override func viewDidLoad() {
       super.viewDidLoad()
       
-      if (UserDefaults.standard.object(forKey: "firstTimeLoadingCurrencies") as? Bool) == nil {
+      loadSelectedCurrencySettings()
+      
+      if (UserDefaults.standard.object(forKey: "isFirstTimeLoadingCurrencies") as? Bool) == nil {
          
+         currencyConversionView.isHidden = true
          getCurrencyList()
          
          
       } else {
          
-         loadCurrencyList()
+         loader.stopAnimating()
          loadConversions()
          
       }
+      
+      NotificationCenter.default.addObserver(self, selector: #selector(CurrencyConverterViewController.resetConversionPage),name:NSNotification.Name(rawValue: "popupClosed"), object: nil)
       
    }
    
@@ -158,73 +172,7 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
       // Dispose of any resources that can be recreated.
    }
    
-   /***************************************************************/
-   //               !!!PICKER FUNCTIONS!!!
-   /***************************************************************/
-   public func numberOfComponents(in pickerView: UIPickerView) -> Int {
-      
-      return 1
-      
-   }
    
-   public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-      
-      return currencies.count
-      
-   }
-   
-   func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-      
-      var curArray = Array(currencies.keys).sorted()
-      
-      return curArray[row]
-      
-   }
-   
-   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-      
-      var curArray = Array(currencies.keys).sorted()
-      
-      if isSourceCurrency {
-         fromCurrencyButton.setTitle(curArray[row], for: .normal)
-         fromPicker.isHidden = true
-         fromCurrencyButton.isHidden = false
-         fromAmount.isHidden = false
-         questionButton.isHidden = false
-         
-         saveSelectedCurrencySettings(currency: curArray[fromPicker.selectedRow(inComponent: 0)])
-         
-      } else {
-         
-         toCurrencyButton.setTitle(curArray[row], for: .normal)
-         toPicker.isHidden = true
-         toCurrencyButton.isHidden = false
-         toAmount.isHidden = false
-         
-         saveSelectedCurrencySettings(currency: curArray[toPicker.selectedRow(inComponent: 0)], sourceCurrency: false)
-         
-      }
-      
-      isSourceCurrency = true
-      
-      if fromAmount.text == "" {
-         
-         toAmount.text = ""
-         
-      } else if Double(fromAmount.text!) != nil {
-         
-         toAmount.text = ""
-         getExchangeRate()
-         
-         
-      } else {
-         
-         print("Not double....")
-         toAmount.text = ""
-         
-      }
-      
-   }
    
    /***************************************************************/
    //               !!!TABLE FUNCTIONS!!!
@@ -286,43 +234,37 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
       
       if let sourceCurrency = UserDefaults.standard.object(forKey: "sourceCurrency") as? String {
          
-         fromPicker.selectRow(Array(currencies.keys).sorted().index(of: sourceCurrency)!, inComponent: 0, animated: true)
-         
+         sourceCurrencyButton.setTitle(sourceCurrency, for: .normal)
          
       } else { // If first time using, set source default to USD
          
-         fromPicker.selectRow(Array(currencies.keys).sorted().index(of: "USD")!, inComponent: 0, animated: true)
+         sourceCurrencyButton.setTitle("USD", for: .normal)
+         UserDefaults.standard.set("USD", forKey: "sourceCurrency")
          
       }
       
       if let targetCurrency = UserDefaults.standard.object(forKey: "targetCurrency") as? String {
          
-         toPicker.selectRow(Array(currencies.keys).sorted().index(of: targetCurrency)!, inComponent: 0, animated: true)
+         targetCurrencyButton.setTitle(targetCurrency, for: .normal)
          
       } else { // If first time using, set target default to JPY
          
-         toPicker.selectRow(Array(currencies.keys).sorted().index(of: "JPY")!, inComponent: 0, animated: true)
+         targetCurrencyButton.setTitle("JPY", for: .normal)
+         UserDefaults.standard.set("JPY", forKey: "targetCurrency")
          
       }
-      
-      fromCurrencyButton.setTitle(Array(currencies.keys).sorted()[fromPicker.selectedRow(inComponent: 0)], for: .normal)
-      toCurrencyButton.setTitle(Array(currencies.keys).sorted()[toPicker.selectedRow(inComponent: 0)], for: .normal)
       
    }
    
-   // SAVE PICKER SETTINGS TO PERMANANT MEMORY //
-   func saveSelectedCurrencySettings(currency: String, sourceCurrency: Bool = true) {
+   // SAVE TABLE SETTINGS TO PERMANANT MEMORY //
+   func saveSelectedCurrencySettings(newSourceCurrency: String, newTargetCurrency: String) {
       
-      if sourceCurrency {
-         
-         UserDefaults.standard.set(currency, forKey: "sourceCurrency")
-         
-      } else {
-         
-         UserDefaults.standard.set(currency, forKey: "targetCurrency")
-         
-      }
+      UserDefaults.standard.set(newSourceCurrency, forKey: "sourceCurrency")
+      
+      UserDefaults.standard.set(newTargetCurrency, forKey: "targetCurrency")
+      
    }
+   
    
    // GET LIST OF CURRENCIES FROM API - ONLY USED FIRST TIME APP RUNS //
    func getCurrencyList() {
@@ -359,8 +301,8 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
                      
                      print("\(numberOfCurrencies) currencies saved")
                      if self.saveToCoreData() {
-                        self.firstTime = false
-                        UserDefaults.standard.set(self.firstTime, forKey: "firstTimeLoadingCurrencies")
+                        self.isFirstTime = false
+                        UserDefaults.standard.set(self.isFirstTime, forKey: "isFirstTimeLoadingCurrencies")
                      }
                      
                   })
@@ -396,7 +338,18 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
          
          data.setValue(abbreviation, forKey: "abbreviation")
          data.setValue(currency, forKey: "currency")
-         data.setValue(false, forKey: "active")
+         
+         if abbreviation == "USD" || abbreviation == "JPY" {
+            
+            data.setValue(true, forKey: "recently_used")
+            data.setValue(Int(NSDate().timeIntervalSince1970), forKey: "timestamp_used")
+            
+         } else {
+         
+         data.setValue(false, forKey: "recently_used")
+         data.setValue(0, forKey: "timestamp_used")
+         
+         }
          
          do {
             try context.save()
@@ -411,62 +364,13 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
       }
       
       print("\(numberOfCurrencies) currencies saved")
-      loadCurrencyList()
+      currencyConversionView.isHidden = false
+      loader.stopAnimating()
       
       return isSuccess
       
    }
    
-   // LOAD ALL THE CURRENCIES FROM CORE DATA //
-   func loadCurrencyList() {
-      
-      let appDelegate = UIApplication.shared.delegate as! AppDelegate
-      let context = appDelegate.persistentContainer.viewContext
-      let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Currency_List")
-      
-      request.returnsObjectsAsFaults = false
-      
-      do {
-         
-         let results = try context.fetch(request)
-         
-         if results.count > 0 {
-            
-            for result in results as! [NSManagedObject] {
-               guard let abbreviation = result.value(forKey: "abbreviation") as? String,
-                  let currency = result.value(forKey: "currency") as? String
-                  
-                  else {continue}
-               
-               currencies[abbreviation] = currency
-      
-            }
-            
-         }
- 
-         
-      } catch {
-         
-         print("Error loading list of currencies")
-         
-      }
-      
-      print("Currencies loaded")
-      
-      fromPicker.reloadAllComponents()
-      toPicker.reloadAllComponents()
-      loadSelectedCurrencySettings()
-      
-      toArrow.isHidden = false
-      fromCurrencyButton.isHidden = false
-      toCurrencyButton.isHidden = false
-      questionButton.isHidden = false
-      fromAmount.isHidden = false
-      toAmount.isHidden = false
-      switcher.isHidden = false
-      loader.stopAnimating()
-      
-   }
    
    // LOAD CONVERSION FROM CORE DATA TO BE SHOWN IN TABLE //
    func loadConversions() {
@@ -520,8 +424,11 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
       
       targetAmountLoader.startAnimating()
       
-      let sourceCurrency = Array(currencies.keys).sorted()[fromPicker.selectedRow(inComponent: 0)]
-      let targetCurrency = Array(currencies.keys).sorted()[toPicker.selectedRow(inComponent: 0)]
+      let sourceCurrency = sourceCurrencyButton.currentTitle!
+      let targetCurrency = targetCurrencyButton.currentTitle!
+      
+      print(sourceCurrency)
+      print(targetCurrency)
       
       var sourceRate = 0.0
       var targetRate = 0.0
@@ -589,14 +496,14 @@ class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, U
    // CONVERT //
    func convert(sourceRate: Double, targetRate: Double) {
       
-      if Double(fromAmount.text!) != nil {
+      if Double(sourceAmount.text!) != nil {
          
-         let sourceValueInDollars = (1/sourceRate) * Double(fromAmount.text!)!
+         let sourceValueInDollars = (1/sourceRate) * Double(sourceAmount.text!)!
          
-         let targetAmount = sourceValueInDollars * targetRate
+         let targetAmountDouble = sourceValueInDollars * targetRate
          
          targetAmountLoader.stopAnimating()
-         toAmount.text = String(format: "%.2f", targetAmount)
+         targetAmount.text = String(format: "%.2f", targetAmountDouble)
       }
       
    }
