@@ -163,7 +163,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
    /***************************************************************/
    func checkGmtOffset(locationName: String, gmtOffset: Int, zoneName: String) {
       
-      let url = URL(string: "https://api.timezonedb.com/v2/get-time-zone?key=Y4GZZZOFMR8R&format=json&by=zone&zone=" + zoneName)
+      let url = URL(string: "https://api.timezonedb.com/v2/get-time-zone?key=" + APIKeys().getClockAPIKey() + "&format=json&by=zone&zone=" + zoneName)
       
       let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
          
@@ -325,7 +325,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
    /***************************************************************/
    func getTimeZoneInfo() {
       
-      let url = URL(string: "https://api.timezonedb.com/v2/list-time-zone?key=Y4GZZZOFMR8R&format=json")
+      let url = URL(string: "https://api.timezonedb.com/v2/list-time-zone?key=" + APIKeys().getClockAPIKey() + "&format=json")
       
       let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
          
@@ -473,7 +473,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       
       if clocks.count != 0 {
          
-         if currentMinute == getTimeString().minute {
+         if currentMinute == TimeString().getTimeString().minute {
             
             change = false
             
@@ -556,35 +556,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       }
    }
    
-   // GET TIME INFO //
-   func getTimeString(gmtOffset: Int = 0) -> (dateString: String, timeString: String, hour: Int, minute: Int, second: Int) {
-      
-      let date = NSDate()
-      let dateFormatter = DateFormatter()
-      dateFormatter.timeZone = NSTimeZone(forSecondsFromGMT: gmtOffset) as TimeZone!
-      dateFormatter.timeStyle = .short
-      dateFormatter.locale = NSLocale(localeIdentifier: "en-US") as Locale!
-      dateFormatter.dateStyle = DateFormatter.Style.medium
-      
-      let dateTimeString = dateFormatter.string(from: date as Date)
-      let hour = dateFormatter.calendar.component(.hour, from: date as Date)
-      let minute = dateFormatter.calendar.component(.minute, from: date as Date)
-      let second = dateFormatter.calendar.component(.second, from: date as Date)
-      
-      var dateString = ""
-      var timeString = ""
-      
-      let temp: NSString? = dateTimeString as NSString?
-      if let stringArray = temp?.components(separatedBy: ", ") {
-         
-         dateString = stringArray[0] + ", " + stringArray[1]
-         timeString = stringArray.last!
-         
-      }
-      
-      return (dateString, timeString, hour, minute, second)
-      
-   }
+
    
    /************************* TABLE FUNCTIONS *********************************/
    
@@ -607,10 +579,10 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       let cell = tableView.dequeueReusableCell(withIdentifier: "ClockTableViewCell", for: indexPath) as! ClockTableViewCell
       
       cell.locationNameLabel.text = clocksArray[indexPath.row]
-      cell.timeLabel.text = String(getTimeString(gmtOffset: (clocks[clocksArray[indexPath.row]]?.gmtOffset!)!).timeString)
-      cell.dateLabel.text = String(getTimeString(gmtOffset: (clocks[clocksArray[indexPath.row]]?.gmtOffset!)!).dateString)
+      cell.timeLabel.text = String(TimeString().getTimeString(gmtOffset: (clocks[clocksArray[indexPath.row]]?.gmtOffset!)!).timeString)
+      cell.dateLabel.text = String(TimeString().getTimeString(gmtOffset: (clocks[clocksArray[indexPath.row]]?.gmtOffset!)!).dateString)
       
-      currentMinute = getTimeString(gmtOffset: (clocks[clocksArray[indexPath.row]]?.gmtOffset!)!).minute
+      currentMinute = TimeString().getTimeString(gmtOffset: (clocks[clocksArray[indexPath.row]]?.gmtOffset!)!).minute
       
       return cell
       

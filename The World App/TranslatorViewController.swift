@@ -15,7 +15,6 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
    var firstTime = true  // Used to download data the first time the open opens.
    var languages = [String: String] ()
    var sourceLanguageSelected = true
-   let key = "AIzaSyAWDvyP9k99oqCoS-w5rIpmIuemRZEajag" // API Code
    struct TranslationInfo {
       var sourceLanguage: String?
       var targetLanguage: String?
@@ -247,7 +246,7 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
    // GET LIST OF LANGUAGES FROM API - ONLY USED FIRST TIME APP RUNS //
    func getLanguagesList() {
       
-      let url = URL(string: "https://www.googleapis.com/language/translate/v2/languages?key=" + key + "&target=en")
+      let url = URL(string: "https://www.googleapis.com/language/translate/v2/languages?key=" + APIKeys().getGoogleTranslatorAPIKey() + "&target=en")
       
       let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
          
@@ -437,7 +436,7 @@ class TranslatorViewController: UIViewController, UIPickerViewDataSource, UIPick
          let sourceLanguageCode = languages[sourceLanguage]! as String
          let targetLanguageCode = languages[targetLanguage]! as String
          
-         let urlString = "https://www.googleapis.com/language/translate/v2?key=" + key + "&q=" + textToTranslateEncoded + "&source=" + sourceLanguageCode + "&target=" + targetLanguageCode
+         let urlString = "https://www.googleapis.com/language/translate/v2?key=" + APIKeys().getGoogleTranslatorAPIKey() + "&q=" + textToTranslateEncoded + "&source=" + sourceLanguageCode + "&target=" + targetLanguageCode
          
          let url = URL(string: urlString)
          

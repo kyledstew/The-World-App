@@ -302,7 +302,7 @@ class WeatherViewController: UIViewController, UITableViewDataSource, UITableVie
       
       let encodedURL = locationName.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlFragmentAllowed)
       
-      let urlString = "http://api.openweathermap.org/data/2.5/weather?q=" + encodedURL! +  "&appid=58cfe76c601f5cfff47b22bc9cad0e1b&units=metric"
+      let urlString = "http://api.openweathermap.org/data/2.5/weather?q=" + encodedURL! +  "&appid=" + APIKeys().getWeatherAPIKey() + "&units=metric"
       
       let url = URL(string: urlString)
       
