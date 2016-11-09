@@ -18,8 +18,6 @@ class SelectedCurrencySettings {
          
          sourceCurrency = temp
          
-
-         
       } else { // If first time using, set source default to USD
          
          sourceCurrency = "USD"
@@ -29,7 +27,6 @@ class SelectedCurrencySettings {
 
       return sourceCurrency!
 
-      
    }
    
    func getTargetCurrency() -> String {
@@ -52,11 +49,17 @@ class SelectedCurrencySettings {
    }
    
    // SAVE TABLE SETTINGS TO PERMANANT MEMORY //
-   func saveSelectedCurrencySettings(newSourceCurrency: String, newTargetCurrency: String) {
+   func saveSelectedCurrencySettings(newSourceCurrency: String = "", newTargetCurrency: String = "") {
       
-      UserDefaults.standard.set(newSourceCurrency, forKey: "sourceCurrency")
+      if newSourceCurrency != "" {
+         
+         UserDefaults.standard.set(newSourceCurrency, forKey: "sourceCurrency")
       
-      UserDefaults.standard.set(newTargetCurrency, forKey: "targetCurrency")
+      } else if newTargetCurrency != "" {
+         
+         UserDefaults.standard.set(newTargetCurrency, forKey: "targetCurrency")
+         
+      }
       
    }
 

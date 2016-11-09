@@ -14,14 +14,12 @@ class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UI
    // VARIABLES //
    var isFirstTime = true
    
-   var currencyData = CurrencyData()
    var conversionsData = ConversionsData()
    
    var sourceCurrencySelected = true
    
    var conversions = [Int: ConversionInfo] ()
    var isSourceCurrency = true // keep track of which currency changed
-   var blurredScreen = BlurVisualEffectViewController()
    
    // UI ITEMS //
    @IBOutlet var sourceCurrencyButton: UIButton!
@@ -47,17 +45,18 @@ class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UI
 
       
    }
+   
    @IBAction func sourceCurrencyButtonPressed(_ sender: AnyObject) {
       
       sourceCurrencySelected = true
-      blurredScreen.enableBlur(temp: self)
+      BlurVisualEffectViewController().enableBlur(temp: self)
       
    }
    
    @IBAction func targetCurrencyButtonPressed(_ sender: AnyObject) {
       
       sourceCurrencySelected = false
-      blurredScreen.enableBlur(temp: self)
+      BlurVisualEffectViewController().enableBlur(temp: self)
       
    }
    
@@ -73,12 +72,11 @@ class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UI
    
       callConvert()
       
-
    }
    
    @IBAction func sourceAmountValueChanged(_ sender: AnyObject) {
 
-         callConvert()
+      callConvert()
       
    }
    
@@ -87,6 +85,7 @@ class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UI
       if sourceAmount.text != "" && Double(sourceAmount.text!) != nil {
          
          clickSaveConversionPrompt.isHidden = true
+         updatedTime.isHidden = false
          
          if conversionsData.saveConversion(sourceAmount: Double(sourceAmount.text!)!, sourceCurrency: sourceCurrencyButton.currentTitle!, targetAmount: Double(targetAmount.text!)!, targetCurrency: targetCurrencyButton.currentTitle!) {
          
@@ -142,26 +141,9 @@ class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UI
       
    }
    
-   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-      if segue.identifier == "toTargetCurrencySelector" {
-         
-         let selectCurrencyViewController = segue.destination as! SelectCurrencyViewController
-         
-         selectCurrencyViewController.selectedCurrency = targetCurrencyButton.currentTitle!
-         
-      } else if segue.identifier == "toSourceCurrencySelector" {
-         
-         let selectCurrencyViewController = segue.destination as! SelectCurrencyViewController
-         
-         selectCurrencyViewController.selectedCurrency = sourceCurrencyButton.currentTitle!
-         
-      }
-      
-   }
-   
    func resetConversionPage() {
       
-      blurredScreen.disableBlur(temp: self)
+      BlurVisualEffectViewController().disableBlur(temp: self)
       sourceCurrencyButton.setTitle(SelectedCurrencySettings().getSourceCurrency(), for: .normal)
       targetCurrencyButton.setTitle(SelectedCurrencySettings().getTargetCurrency(), for: .normal)
       
@@ -179,38 +161,53 @@ class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UI
       
       if (UserDefaults.standard.object(forKey: "isFirstTimeLoadingCurrencies") as? Bool) == nil {
          
+         loader.startAnimating()
          currencyConversionView.isHidden = true
-         currencyData.getCurrencyList(completionHandler: {() -> Void in
+         
+         CurrencyDataAPI().getCurrencyList(completionHandler: {() -> Void in
          
             self.currencyConversionView.isHidden = false
             self.loader.stopAnimating()
          
          })
          
-         currencyConversionView.isHidden = false
-         loader.stopAnimating()
-         
       } else {
          
-         loader.stopAnimating()
-         conversions = conversionsData.loadConversions()
+         conversions = ConversionsData().loadConversions()
          if conversions.count > 0 {
             clickSaveConversionPrompt.isHidden = true
+            updatedTime.isHidden = false
          }
          callRefresh()
          
       }
       
-      NotificationCenter.default.addObserver(self, selector: #selector(CurrencyConverterViewController.resetConversionPage),name:NSNotification.Name(rawValue: "popupClosed"), object: nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(CurrencyConverterViewController.resetConversionPage),name:NSNotification.Name(rawValue: "SelectCurrencyPopupClosed"), object: nil)
       
    }
    
    override func didReceiveMemoryWarning() {
       super.didReceiveMemoryWarning()
-      // Dispose of any resources that can be recreated.
    }
    
-   
+   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+      if segue.identifier == "toTargetCurrencySelector" {
+         
+         let selectCurrencyViewController = segue.destination as! SelectCurrencyViewController
+         
+         selectCurrencyViewController.isSourceCurrency = false
+         selectCurrencyViewController.selectedCurrency = targetCurrencyButton.currentTitle!
+         
+      } else if segue.identifier == "toSourceCurrencySelector" {
+         
+         let selectCurrencyViewController = segue.destination as! SelectCurrencyViewController
+         
+         selectCurrencyViewController.isSourceCurrency = true
+         selectCurrencyViewController.selectedCurrency = sourceCurrencyButton.currentTitle!
+         
+      }
+      
+   }
    
    /***************************************************************/
    //               !!!TABLE FUNCTIONS!!!
@@ -253,6 +250,7 @@ class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UI
          if conversions.count == 0 {
             
             clickSaveConversionPrompt.isHidden = false
+            updatedTime.isHidden = true
             
          }
          

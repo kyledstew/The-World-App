@@ -1,5 +1,5 @@
 //
-//  SectionsData.swift
+//  CurrencySectionsData.swift
 //  The World App
 //
 //  Created by Kyle Stewart on 10/20/16.
@@ -9,12 +9,12 @@
 import UIKit
 import CoreData
 
-class SectionsData {
+class CurrencySectionsData {
    
    // LOAD ALL THE CURRENCIES FROM CORE DATA //
-   func loadCurrencyList(searchText: String = "") -> [Section] {
+   func loadCurrencyList(searchText: String = "") -> [CurrencySection] {
       
-      var sectionsArray = [Section] ()
+      var sectionsArray = [CurrencySection] ()
       
       let appDelegate = UIApplication.shared.delegate as! AppDelegate
       let context = appDelegate.persistentContainer.viewContext
@@ -34,8 +34,6 @@ class SectionsData {
          
          if results.count > 0 {
             
-            var numberOfRecentCurrencies = 0
-            
             var currencies = [String: CurrencyInfo] ()
             var recentlyUsedCurrencies = [String: CurrencyInfo] ()
             
@@ -49,14 +47,12 @@ class SectionsData {
                   else {continue}
                
                if recentlyUsed {
-                  
-                  numberOfRecentCurrencies += 1
          
                   let temp = CurrencyInfo(curr: currency, time: timestampUsed)
                   
                   recentlyUsedCurrencies[abbreviation] = temp
                   
-                  if numberOfRecentCurrencies > 5 {
+                  if recentlyUsedCurrencies.count > 5 {
                      
                      let temp = getOldestCurrency(recentCurrencies: &recentlyUsedCurrencies)
                      currencies[temp.currency] = temp.info
@@ -74,8 +70,8 @@ class SectionsData {
                
             }
             
-            let recentlyUsed = Section(title: "Recently Used", objects: recentlyUsedCurrencies)
-            let newCurrency = Section(title: "All Currencies", objects: currencies)
+            let recentlyUsed = CurrencySection(title: "Recently Used", objects: recentlyUsedCurrencies)
+            let newCurrency = CurrencySection(title: "All Currencies", objects: currencies)
             
             sectionsArray.append(recentlyUsed)
             sectionsArray.append(newCurrency)
@@ -151,7 +147,7 @@ class SectionsData {
       
       for (abbreviation, info) in recentCurrencies {
        
-         if abbreviation != getCurrentCurrency().sourceCurrency && abbreviation != getCurrentCurrency().targetCurrency {
+         if abbreviation != SelectedCurrencySettings().getSourceCurrency() && abbreviation != SelectedCurrencySettings().getTargetCurrency() {
          
             if currencyInfo != nil {
             
@@ -178,35 +174,4 @@ class SectionsData {
       return(currencyToRemove!, currencyInfo!)
       
    }
-   
-   // Get Current Currency return source or target currency
-   func getCurrentCurrency() -> (sourceCurrency: String, targetCurrency: String){
-      
-      var sourceCurrency: String?
-      var targetCurrency: String?
-      
-      if let temp = UserDefaults.standard.object(forKey: "sourceCurrency") as? String {
-            
-         sourceCurrency = temp
-         
-      } else {
-         
-         sourceCurrency = "USD"
-         
-      }
-      
-      if let temp = UserDefaults.standard.object(forKey: "targetCurrency") as? String {
-            
-         targetCurrency = temp
-         
-      } else {
-         
-         targetCurrency = "JPY"
-         
-      }
-   
-   return (sourceCurrency!, targetCurrency!)
-      
-   }
-
 }

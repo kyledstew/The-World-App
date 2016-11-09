@@ -10,7 +10,7 @@ class APIKeys {
 
    private let currencyAPIKey = "a813f08491bba38f9ed22bf31c3ecd54"
    private let weatherAPIKey = "58cfe76c601f5cfff47b22bc9cad0e1b"
-   private let googleTranslatorAPIKey = "AIzaSyAWDvyP9k99oqCoS-w5rIpmIuemRZEajag"
+   private let googleTranslatorAPIKey = "AIzaSyARJ9VY_g7QjwsMplOFZbq9i5Jzrraz7A0"
    private let clockAPIKey = "Y4GZZZOFMR8R"
    
    func getCurrencyAPIKey() -> String           { return currencyAPIKey }

@@ -1,5 +1,5 @@
 //
-//  CurrencyData.swift
+//  CurrencyDataAPI.swift
 //  The World App
 //
 //  Created by Kyle Stewart on 10/27/16.
@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class CurrencyData {
+class CurrencyDataAPI {
    
    // GET LIST OF CURRENCIES FROM API - ONLY USED FIRST TIME APP RUNS //
    func getCurrencyList(completionHandler:@escaping () -> Void ) {
@@ -30,8 +30,6 @@ class CurrencyData {
                
                do {
                   
-                  var numberOfCurrencies = 0
-                  
                   let jsonResult = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String: AnyObject]
                   
                   let currenciesArray = jsonResult["currencies"] as! [String: String]
@@ -39,7 +37,6 @@ class CurrencyData {
                   for (abbreviation, currency) in currenciesArray {
                      
                      currencies[abbreviation] = currency
-                     numberOfCurrencies += 1
                      
                   }
                   
@@ -80,8 +77,6 @@ class CurrencyData {
       
       var isSuccess = false
       
-      var numberOfCurrencies = 0
-      
       for (abbreviation, currency) in currencies {
          
          let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -106,7 +101,6 @@ class CurrencyData {
          do {
             try context.save()
             isSuccess = true
-            numberOfCurrencies += 1
             
          } catch {
             
@@ -114,8 +108,6 @@ class CurrencyData {
             
          }
       }
-      
-      print("\(numberOfCurrencies) currencies saved")
       
       return isSuccess
       

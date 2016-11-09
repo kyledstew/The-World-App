@@ -10,8 +10,7 @@ import UIKit
 
 class SelectCurrencyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
    
-   var sectionsData = SectionsData()
-   var sections: [Section] = []
+   var sections: [CurrencySection] = []
    
    var isSourceCurrency = true
    var selectedCurrency = ""
@@ -28,21 +27,9 @@ class SelectCurrencyViewController: UIViewController, UITableViewDelegate, UITab
    override func viewDidLoad() {
       super.viewDidLoad()
       
-      sections = sectionsData.loadCurrencyList()
+      sections = CurrencySectionsData().loadCurrencyList()
       
-      if isSourceCurrency {
-         
-         //selectCurrencyPrompt.text = "Select Source Currency"
-         
-      } else {
-         
-         //selectCurrencyPrompt.text = "Select Target Currency"
-         
-      }
-      
-      let color = UIColor.lightGray.withAlphaComponent(0.0)
-      
-      view.backgroundColor = color
+      view.backgroundColor = UIColor.lightGray.withAlphaComponent(0.0)
       
    }
    
@@ -57,62 +44,8 @@ class SelectCurrencyViewController: UIViewController, UITableViewDelegate, UITab
    
    func closePopup() {
       
-      NotificationCenter.default.post(name: NSNotification.Name(rawValue: "popupClosed"), object: nil)
+      NotificationCenter.default.post(name: NSNotification.Name(rawValue: "SelectCurrencyPopupClosed"), object: nil)
       self.dismiss(animated: true, completion: nil)
-      
-   }
-   
-   
-   // SAVE SETTINGS TO PERMANANT MEMORY //
-   func saveSelectedCurrencySettings(currency: String) {
-      
-      if isSourceCurrency {
-         
-         UserDefaults.standard.set(currency, forKey: "sourceCurrency")
-         
-      } else {
-         
-         UserDefaults.standard.set(currency, forKey: "targetCurrency")
-         
-      }
-   }
-   
-   
-   // Get Current Currency return source or target currency
-   func getCurrentCurrency() {
-
-      if isSourceCurrency {
-         
-         if let sourceCurrency = UserDefaults.standard.object(forKey: "sourceCurrency") as? String {
-
-            selectedCurrency = sourceCurrency
-            
-         } else {
-            
-            selectedCurrency = "USD"
-            
-         }
-         
-      } else {
-         
-         if let targetCurrency = UserDefaults.standard.object(forKey: "targetCurrency") as? String {
-  
-            selectedCurrency = targetCurrency
-            
-         } else {
-            
-         
-            
-         }
-         
-      }
-      
-   }
-   
-   public func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-      
-      print("EDITING BEGAN!")
-      print(searchBar.text!)
       
    }
    
@@ -121,7 +54,7 @@ class SelectCurrencyViewController: UIViewController, UITableViewDelegate, UITab
    
       print(searchText)
       
-      sections = sectionsData.loadCurrencyList(searchText: searchText)
+      sections = CurrencySectionsData().loadCurrencyList(searchText: searchText)
       
       currencyTable.reloadData()
    
@@ -180,8 +113,17 @@ class SelectCurrencyViewController: UIViewController, UITableViewDelegate, UITab
       
       selectedCurrency = tempArray[indexPath.row]
       
-      saveSelectedCurrencySettings(currency: selectedCurrency)
-      sectionsData.setRecentlyUsed(currency: selectedCurrency)
+      if isSourceCurrency {
+      
+         SelectedCurrencySettings().saveSelectedCurrencySettings(newSourceCurrency: selectedCurrency)
+         
+      } else {
+         
+         SelectedCurrencySettings().saveSelectedCurrencySettings(newTargetCurrency: selectedCurrency)
+         
+      }
+
+      CurrencySectionsData().setRecentlyUsed(currency: selectedCurrency)
       
       closePopup()
       

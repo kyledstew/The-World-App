@@ -15,7 +15,6 @@ class ConversionsData {
    func saveConversion(sourceAmount: Double, sourceCurrency: String, targetAmount: Double, targetCurrency: String) -> Bool {
       
       var isSuccess = false
-
       
       let appDelegate = UIApplication.shared.delegate as! AppDelegate
       let context = appDelegate.persistentContainer.viewContext
@@ -46,7 +45,7 @@ class ConversionsData {
    }
    
    // LOAD CONVERSION FROM CORE DATA TO BE SHOWN IN TABLE //
-   func loadConversions() -> [Int: ConversionInfo]{
+   func loadConversions() -> [Int: ConversionInfo] {
       
       var conversions = [Int: ConversionInfo] ()
       
@@ -76,10 +75,9 @@ class ConversionsData {
                
                conversions[timestamp] = temp
                
-               
             }
             
-      }
+         }
          
       } catch {
          
