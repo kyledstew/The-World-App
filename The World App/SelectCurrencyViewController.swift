@@ -10,7 +10,7 @@ import UIKit
 
 class SelectCurrencyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
    
-   var sections: [CurrencySection] = []
+   var sections = [CurrencySection] ()
    
    var isSourceCurrency = true
    var selectedCurrency = ""
@@ -49,17 +49,15 @@ class SelectCurrencyViewController: UIViewController, UITableViewDelegate, UITab
       
    }
    
-   public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) // called when text changes (including clear) 
+   public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) // called when text changes (including clear)
    {
-   
-      print(searchText)
       
       sections = CurrencySectionsData().loadCurrencyList(searchText: searchText)
       
       currencyTable.reloadData()
-   
+      
    }
-
+   
    
    
    /***************************************************************/
@@ -85,7 +83,6 @@ class SelectCurrencyViewController: UIViewController, UITableViewDelegate, UITab
    }
    
    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-      
       
       let tempArray = Array(sections[indexPath.section].items.keys).sorted()
       
@@ -114,7 +111,7 @@ class SelectCurrencyViewController: UIViewController, UITableViewDelegate, UITab
       selectedCurrency = tempArray[indexPath.row]
       
       if isSourceCurrency {
-      
+         
          SelectedCurrencySettings().saveSelectedCurrencySettings(newSourceCurrency: selectedCurrency)
          
       } else {
@@ -122,7 +119,7 @@ class SelectCurrencyViewController: UIViewController, UITableViewDelegate, UITab
          SelectedCurrencySettings().saveSelectedCurrencySettings(newTargetCurrency: selectedCurrency)
          
       }
-
+      
       CurrencySectionsData().setRecentlyUsed(currency: selectedCurrency)
       
       closePopup()

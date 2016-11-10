@@ -57,6 +57,8 @@ class WeatherViewController: UIViewController, UITableViewDataSource, UITableVie
       
       NotificationCenter.default.addObserver(self, selector: #selector(WeatherViewController.loadData),name:NSNotification.Name(rawValue: "reloadWeatherTable"), object: nil)
       
+      NotificationCenter.default.addObserver(self, selector: #selector(WeatherViewController.loadData),name:NSNotification.Name(rawValue: "AddWeatherLocationPopupClosed"), object: nil)
+      
    }
    
    override func didReceiveMemoryWarning() {
@@ -80,6 +82,16 @@ class WeatherViewController: UIViewController, UITableViewDataSource, UITableVie
          addLocationPrompt.isHidden = true
          
       }
+   }
+   
+   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+      
+      if segue.identifier == "toWeatherAdder" {
+         
+         BlurVisualEffectViewController().enableBlur(temp: self)
+         
+      }
+      
    }
    
    /***************************************************************/
@@ -140,6 +152,7 @@ class WeatherViewController: UIViewController, UITableViewDataSource, UITableVie
    // LOAD DATA FROM CORE DATA //
    func loadData(){
       
+      BlurVisualEffectViewController().disableBlur(temp: self)
       loader.startAnimating()
       
       let appDelegate = UIApplication.shared.delegate as! AppDelegate

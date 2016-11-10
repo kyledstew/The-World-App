@@ -11,10 +11,9 @@ import CoreData
 
 class WorldClockViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
    
-   
    // VARIABLES //
    private var timer = Timer()
-   var clocks = [String: GmtOffset] ()  // Key is the location_name, and gmt_offset is the value
+   var timeZones = [String: GmtOffset] ()  // Key is the location_name, and gmt_offset is the value
    var currentMinute: Int?
    var firstTime = true
    var firstTimeLoadComplete = false
@@ -40,7 +39,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       super.viewDidLoad()
       
       // If first time loading app, we need to pull all the data.
-      if let temp = UserDefaults.standard.object(forKey: "firstTimeLoadingClock") as? Bool {
+      if let temp = UserDefaults.standard.object(forKey: "firstTimeLoadingTimeZones") as? Bool {
          
          firstTime = temp
          
@@ -52,7 +51,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
          
       } else {
          
-         loadClocks()
+         loadTimeZones()
          addLocationButton.isEnabled = true
          
       }
@@ -60,7 +59,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       // Update the time every second
       timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(WorldClockViewController.updateTime), userInfo: nil, repeats: true)
       
-      NotificationCenter.default.addObserver(self, selector: #selector(WorldClockViewController.loadClocks),name:NSNotification.Name(rawValue: "reloadClocksTable"), object: nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(WorldClockViewController.loadTimeZones),name:NSNotification.Name(rawValue: "AddTimeZonePopupClosed"), object: nil)
       
    }
    
@@ -69,9 +68,9 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
 
       if !firstTime {
          
-         loadClocks()
+         loadTimeZones()
          
-         if clocks.count == 0 {
+         if timeZones.count == 0 {
             
             loader.stopAnimating()
             
@@ -85,17 +84,28 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       
    }
    
+   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+      
+      if segue.identifier == "toTimeZoneSelector" {
+         
+         BlurVisualEffectViewController().enableBlur(temp: self)
+         
+      }
+      
+   }
+   
    /***************************************************************/
-   // loadClocks(), pulls all clocks that have a active of true set
+   // loadTimeZones(), pulls all timeZones that have a active of true set
    // then checks to see if gmtOffset has changed (daylight savings)
    /***************************************************************/
-   func loadClocks() {
+   func loadTimeZones() {
       
+      BlurVisualEffectViewController().disableBlur(temp: self)
       loader.startAnimating()
       
       let appDelegate = UIApplication.shared.delegate as! AppDelegate
       let context = appDelegate.persistentContainer.viewContext
-      let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Clock")
+      let request = NSFetchRequest<NSFetchRequestResult>(entityName: "TimeZones")
       
       request.returnsObjectsAsFaults = false
       request.predicate = NSPredicate(format: "active == true")
@@ -122,11 +132,11 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
                            
                         }
                         
-                        if clocks[locationName] == nil { // If nil, it's new
+                        if timeZones[locationName] == nil { // If nil, it's new
                            
                            let temp = GmtOffset(countryCode: nil, countryName: nil, gmtOffset: gmtOffset, zoneName: zoneName, timestamp: nil, updated: true)
                            
-                           self.clocks[locationName] = temp
+                           self.timeZones[locationName] = temp
                            checkGmtOffset(locationName: locationName, gmtOffset: gmtOffset, zoneName: zoneName)
                            
                         }
@@ -158,7 +168,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
    }
    
    /***************************************************************/
-   // checkGmtOffset(), checks the current clocks to make sure the
+   // checkGmtOffset(), checks the current timeZones to make sure the
    // gmtOffset hasn't changed
    /***************************************************************/
    func checkGmtOffset(locationName: String, gmtOffset: Int, zoneName: String) {
@@ -184,7 +194,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
                      print("Current \(currentGmtOffset)")
                      
                      let temp = GmtOffset(countryCode: nil, countryName: nil, gmtOffset: gmtOffset, zoneName: zoneName, timestamp: nil, updated: true)
-                     self.clocks[locationName] = temp
+                     self.timeZones[locationName] = temp
                      self.table.reloadData()
                      self.loader.stopAnimating()
                      
@@ -233,7 +243,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       
       let appDelegate = UIApplication.shared.delegate as! AppDelegate
       let context = appDelegate.persistentContainer.viewContext
-      let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Clock")
+      let request = NSFetchRequest<NSFetchRequestResult>(entityName: "TimeZones")
       
       request.predicate = NSPredicate(format: "zone_name = %@", zoneToChange)
       
@@ -278,7 +288,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       
       let appDelegate = UIApplication.shared.delegate as! AppDelegate
       let context = appDelegate.persistentContainer.viewContext
-      let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Clock")
+      let request = NSFetchRequest<NSFetchRequestResult>(entityName: "TimeZones")
       
       request.returnsObjectsAsFaults = false
       request.predicate = NSPredicate(format: "location_name = %@", zoneName)
@@ -339,7 +349,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
                
                do {
                   
-                  var tempClocks = [String: GmtOffset] ()
+                  var tempTimeZones = [String: GmtOffset] ()
                   
                   let jsonResult = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String: AnyObject]
                   
@@ -364,7 +374,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
                                        }
                                        
                                        let temp = GmtOffset(countryCode: countryCode, countryName: countryName, gmtOffset: gmtOffset, zoneName: zoneName, timestamp: timestamp, updated: true)
-                                       tempClocks[self.getLocationName(zoneName: zoneName)] = temp
+                                       tempTimeZones[self.getLocationName(zoneName: zoneName)] = temp
                                        
                                     }
                                     
@@ -380,9 +390,9 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
                      
                      DispatchQueue.main.sync(execute: {
                         
-                        if self.saveToCoreData(tempClocks: tempClocks) {
+                        if self.saveToCoreData(tempTimeZones: tempTimeZones) {
                            self.firstTime = false
-                           UserDefaults.standard.set(self.firstTime, forKey: "firstTimeLoadingClock")
+                           UserDefaults.standard.set(self.firstTime, forKey: "firstTimeLoadingTimeZones")
                         }
                         
                      })
@@ -408,17 +418,17 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
    // saveToCoreData(), to be run after getting JSON file with
    // all of the time zones
    /***************************************************************/
-   func saveToCoreData(tempClocks: [String: GmtOffset]) -> Bool {
+   func saveToCoreData(tempTimeZones: [String: GmtOffset]) -> Bool {
       
       var isSuccess = false
       
       var numberOfTimeZones = 0
       
-      for (locationName, info) in tempClocks {
+      for (locationName, info) in tempTimeZones {
          
          let appDelegate = UIApplication.shared.delegate as! AppDelegate
          let context = appDelegate.persistentContainer.viewContext
-         let data = NSEntityDescription.insertNewObject(forEntityName: "Clock", into: context)
+         let data = NSEntityDescription.insertNewObject(forEntityName: "TimeZones", into: context)
          
          data.setValue(info.countryCode, forKey: "country_code")
          data.setValue(info.countryName, forKey: "country_name")
@@ -449,7 +459,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       
       print("\(numberOfTimeZones) Time Zones Saved")
       
-      self.loadClocks()
+      self.loadTimeZones()
       self.addLocationButton.isEnabled = true
       
       return isSuccess
@@ -471,7 +481,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       
       var change = false
       
-      if clocks.count != 0 {
+      if timeZones.count != 0 {
          
          if currentMinute == TimeString().getTimeString().minute {
             
@@ -560,29 +570,24 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
    
    /************************* TABLE FUNCTIONS *********************************/
    
-   public func numberOfSections(in tableView: UITableView) -> Int {
-      
-      return 1
-      
-   }
-   
    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
       
-      return clocks.count
+      return timeZones.count
       
    }
    
    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       
-      let clocksArray = Array(clocks.keys).sorted()
+      let timeZonesArray = Array(timeZones.keys).sorted()
       
       let cell = tableView.dequeueReusableCell(withIdentifier: "ClockTableViewCell", for: indexPath) as! ClockTableViewCell
       
-      cell.locationNameLabel.text = clocksArray[indexPath.row]
-      cell.timeLabel.text = String(TimeString().getTimeString(gmtOffset: (clocks[clocksArray[indexPath.row]]?.gmtOffset!)!).timeString)
-      cell.dateLabel.text = String(TimeString().getTimeString(gmtOffset: (clocks[clocksArray[indexPath.row]]?.gmtOffset!)!).dateString)
+      cell.locationNameLabel.text = timeZonesArray[indexPath.row]
+      cell.timeLabel.text = String(TimeString().getTimeString(gmtOffset: (timeZones[timeZonesArray[indexPath.row]]?.gmtOffset!)!).timeString)
+      cell.dateLabel.text = String(TimeString().getTimeString(gmtOffset: (timeZones[timeZonesArray[indexPath.row]]?.gmtOffset!)!).dateString)
       
-      currentMinute = TimeString().getTimeString(gmtOffset: (clocks[clocksArray[indexPath.row]]?.gmtOffset!)!).minute
+      
+      currentMinute = TimeString().getTimeString(gmtOffset: (timeZones[timeZonesArray[indexPath.row]]?.gmtOffset!)!).minute
       
       return cell
       
@@ -591,14 +596,14 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
       if editingStyle == UITableViewCellEditingStyle.delete {
          
-         let zoneName = Array(clocks.keys).sorted()[indexPath.row]
+         let zoneName = Array(timeZones.keys).sorted()[indexPath.row]
          
          setActiveFalse(zoneName: zoneName)
-         clocks[zoneName] = nil
+         timeZones[zoneName] = nil
          
          table.reloadData()
          
-         if clocks.count == 0 {
+         if timeZones.count == 0 {
             
             addClockPrompt.isHidden = false
             

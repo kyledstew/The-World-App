@@ -21,7 +21,7 @@ class AddNewWeatherLocationViewController: UIViewController {
    
    @IBAction func cancelButton(_ sender: AnyObject) {
       
-      self.dismiss(animated: true, completion: nil)
+      closePopup()
       
    }
    
@@ -38,6 +38,19 @@ class AddNewWeatherLocationViewController: UIViewController {
    }
    override func viewDidLoad() {
       super.viewDidLoad()
+      
+      view.backgroundColor = UIColor.lightGray.withAlphaComponent(0.0)
+      
+   }
+   
+   override func viewDidDisappear(_ animated: Bool) {
+      closePopup()
+   }
+   
+   func closePopup() {
+      
+      NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AddWeatherLocationPopupClosed"), object: nil)
+      self.dismiss(animated: true, completion: nil)
       
    }
    
@@ -83,7 +96,7 @@ class AddNewWeatherLocationViewController: UIViewController {
                            
                            if locationName == self.locationInput.text!.capitalized ||
                               locationName + " " == self.locationInput.text!.capitalized
-                           
+                              
                            { // Sometimes the result is different then what we searched. Make sure it's the same!
                               
                               if let lon = jsonResult["coord"]?["lon"] as? Double {
@@ -153,7 +166,7 @@ class AddNewWeatherLocationViewController: UIViewController {
                            
                         } else {    // DATA ALREADY EXISTS
                            
-                           self.dismiss(animated: true, completion: nil)
+                           self.closePopup()
                            
                         }
                         

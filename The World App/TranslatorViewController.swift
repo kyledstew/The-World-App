@@ -7,9 +7,8 @@
 //
 
 import UIKit
-import CoreData
 
-class TranslatorViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegate, UITableViewDataSource {
+class TranslatorViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
    
    // VARIABLES //
    var firstTime = true  // Used to download data the first time the open opens.
@@ -22,6 +21,7 @@ class TranslatorViewController: UIViewController, UIPickerViewDelegate, UITableV
    @IBOutlet var targetLanguageButton: UIButton!
    @IBOutlet var textToTranslate: UITextView!
    @IBOutlet var translationLoader: UIActivityIndicatorView!
+   @IBOutlet var translateButton: UIButton!
    @IBOutlet var loader: UIActivityIndicatorView!
    @IBOutlet var translationsTable: UITableView!
    // UI VIEWS
@@ -64,12 +64,16 @@ class TranslatorViewController: UIViewController, UIPickerViewDelegate, UITableV
          
          textToTranslate.isEditable = false
          translationLoader.startAnimating()
+         translateButton.setTitle("", for: .normal)
          
          var info = TranslationInfo(sourceLanguage: sourceLanguageButton.currentTitle!, targetLanguage: targetLanguageButton.currentTitle!, sourceLanguageCode: LanguageSectionsData().getLanguageCode(languageName:sourceLanguageButton.currentTitle!), targetLanguageCode: LanguageSectionsData().getLanguageCode(languageName: targetLanguageButton.currentTitle!), textToTranslate: textToTranslate.text!, translatedText: nil)
          
          Translate().translateText(temp: &info, completionHandler: {
             
             self.translationLoader.stopAnimating()
+            self.textToTranslate.isEditable = true
+            self.textToTranslate.text = ""
+            self.translateButton.setTitle("Translate", for: .normal)
             self.translations = TranslationsData().loadTranslations()
             self.translationsTable.reloadData()
             
