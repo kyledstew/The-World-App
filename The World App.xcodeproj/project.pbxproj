@@ -24,16 +24,23 @@
 		FF21F5181DA81B1C0064EB90 /* World_Traveler_s_App.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FF21F5061DA81B1C0064EB90 /* World_Traveler_s_App.xcdatamodeld */; };
 		FF21F5191DA81B1C0064EB90 /* WorldClockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF21F5081DA81B1C0064EB90 /* WorldClockViewController.swift */; };
 		FF5435BA1DB3AE3200E28153 /* SelectCurrencyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5435B91DB3AE3200E28153 /* SelectCurrencyViewController.swift */; };
+		FF5552F41DE5231200469924 /* GmtOffsetInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5552F31DE5231200469924 /* GmtOffsetInfo.swift */; };
+		FF584C4F1DEEC88600AF5547 /* WeatherDataApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF584C4E1DEEC88600AF5547 /* WeatherDataApi.swift */; };
 		FF66AE9D1DCE17A60036FDC2 /* Convert.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF66AE9C1DCE17A60036FDC2 /* Convert.swift */; };
 		FF66AE9F1DCF476D0036FDC2 /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF66AE9E1DCF476C0036FDC2 /* APIKeys.swift */; };
 		FF66AEA21DCF66990036FDC2 /* SelectedCurrencySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF66AEA11DCF66990036FDC2 /* SelectedCurrencySettings.swift */; };
 		FF66AEA41DCF6B6F0036FDC2 /* DeleteCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF66AEA31DCF6B6F0036FDC2 /* DeleteCoreData.swift */; };
 		FF67A3B31DB772CD00ABC326 /* CurrencySelectorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF67A3B21DB772CD00ABC326 /* CurrencySelectorTableViewCell.swift */; };
+		FF6966811DDF2F1500B671FB /* WeatherInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6966801DDF2F1500B671FB /* WeatherInfo.swift */; };
+		FF6966831DDF308300B671FB /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6966821DDF308300B671FB /* WeatherData.swift */; };
+		FF6E6EE51DEDBA7000C41A76 /* AlertsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6E6EE41DEDBA7000C41A76 /* AlertsViewController.swift */; };
 		FF7D736D1DC1FC0A00C37C5C /* CurrencyDataAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7D736C1DC1FC0A00C37C5C /* CurrencyDataAPI.swift */; };
 		FF7D73711DC2376100C37C5C /* ConversionsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7D73701DC2376100C37C5C /* ConversionsData.swift */; };
 		FF7D73751DC2402B00C37C5C /* ConversionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7D73741DC2402B00C37C5C /* ConversionInfo.swift */; };
 		FF9F099C1DB8FB6300A54028 /* CurrencySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9F099B1DB8FB6300A54028 /* CurrencySection.swift */; };
 		FFAE2D9A1DB6462B001C1FA1 /* BlurVisualEffectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFAE2D991DB6462B001C1FA1 /* BlurVisualEffectViewController.swift */; };
+		FFC6407A1DE87DC400A74E6A /* GmtOffset.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC640791DE87DC400A74E6A /* GmtOffset.swift */; };
+		FFC6407C1DE87E1200A74E6A /* FirstTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC6407B1DE87E1200A74E6A /* FirstTime.swift */; };
 		FFCEF3D61DB7C4440068513B /* CurrencySectionsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCEF3D51DB7C4440068513B /* CurrencySectionsData.swift */; };
 		FFD224601DD0AE28008587BA /* TimeString.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD2245F1DD0AE28008587BA /* TimeString.swift */; };
 		FFD224621DD1F9B3008587BA /* SelectLanguageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD224611DD1F9B3008587BA /* SelectLanguageViewController.swift */; };
@@ -71,16 +78,23 @@
 		FF21F5071DA81B1C0064EB90 /* World_Traveler_s_App.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = World_Traveler_s_App.xcdatamodel; sourceTree = "<group>"; };
 		FF21F5081DA81B1C0064EB90 /* WorldClockViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorldClockViewController.swift; sourceTree = "<group>"; };
 		FF5435B91DB3AE3200E28153 /* SelectCurrencyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectCurrencyViewController.swift; sourceTree = "<group>"; };
+		FF5552F31DE5231200469924 /* GmtOffsetInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GmtOffsetInfo.swift; sourceTree = "<group>"; };
+		FF584C4E1DEEC88600AF5547 /* WeatherDataApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherDataApi.swift; sourceTree = "<group>"; };
 		FF66AE9C1DCE17A60036FDC2 /* Convert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Convert.swift; sourceTree = "<group>"; };
 		FF66AE9E1DCF476C0036FDC2 /* APIKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
 		FF66AEA11DCF66990036FDC2 /* SelectedCurrencySettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectedCurrencySettings.swift; sourceTree = "<group>"; };
 		FF66AEA31DCF6B6F0036FDC2 /* DeleteCoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeleteCoreData.swift; sourceTree = "<group>"; };
 		FF67A3B21DB772CD00ABC326 /* CurrencySelectorTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelectorTableViewCell.swift; sourceTree = "<group>"; };
+		FF6966801DDF2F1500B671FB /* WeatherInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherInfo.swift; sourceTree = "<group>"; };
+		FF6966821DDF308300B671FB /* WeatherData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
+		FF6E6EE41DEDBA7000C41A76 /* AlertsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlertsViewController.swift; path = ../AlertsViewController.swift; sourceTree = "<group>"; };
 		FF7D736C1DC1FC0A00C37C5C /* CurrencyDataAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyDataAPI.swift; sourceTree = "<group>"; };
 		FF7D73701DC2376100C37C5C /* ConversionsData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversionsData.swift; sourceTree = "<group>"; };
 		FF7D73741DC2402B00C37C5C /* ConversionInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversionInfo.swift; sourceTree = "<group>"; };
 		FF9F099B1DB8FB6300A54028 /* CurrencySection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySection.swift; sourceTree = "<group>"; };
 		FFAE2D991DB6462B001C1FA1 /* BlurVisualEffectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurVisualEffectViewController.swift; sourceTree = "<group>"; };
+		FFC640791DE87DC400A74E6A /* GmtOffset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GmtOffset.swift; sourceTree = "<group>"; };
+		FFC6407B1DE87E1200A74E6A /* FirstTime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstTime.swift; sourceTree = "<group>"; };
 		FFCEF3D51DB7C4440068513B /* CurrencySectionsData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySectionsData.swift; sourceTree = "<group>"; };
 		FFD2245F1DD0AE28008587BA /* TimeString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeString.swift; sourceTree = "<group>"; };
 		FFD224611DD1F9B3008587BA /* SelectLanguageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectLanguageViewController.swift; sourceTree = "<group>"; };
@@ -131,6 +145,7 @@
 				FF21F5011DA81B1C0064EB90 /* Info.plist */,
 				FF21F4F71DA81B1C0064EB90 /* Assets.xcassets */,
 				FFAE2D991DB6462B001C1FA1 /* BlurVisualEffectViewController.swift */,
+				FF6E6EE41DEDBA7000C41A76 /* AlertsViewController.swift */,
 				FF21F4F61DA81B1C0064EB90 /* AppDelegate.swift */,
 				FF21F5061DA81B1C0064EB90 /* World_Traveler_s_App.xcdatamodeld */,
 				FF66AE9E1DCF476C0036FDC2 /* APIKeys.swift */,
@@ -185,6 +200,9 @@
 				FFE54F351DD46C5000DF7530 /* TimeZoneSection.swift */,
 				FFE54F371DD46CC000DF7530 /* TimeZoneInfo.swift */,
 				FFE54F391DD46E5000DF7530 /* TimeZoneData.swift */,
+				FF5552F31DE5231200469924 /* GmtOffsetInfo.swift */,
+				FFC640791DE87DC400A74E6A /* GmtOffset.swift */,
+				FFC6407B1DE87E1200A74E6A /* FirstTime.swift */,
 			);
 			name = "World Clock";
 			sourceTree = "<group>";
@@ -193,8 +211,11 @@
 			isa = PBXGroup;
 			children = (
 				FF21F5041DA81B1C0064EB90 /* WeatherTableViewCell.swift */,
+				FF6966801DDF2F1500B671FB /* WeatherInfo.swift */,
 				FF21F5051DA81B1C0064EB90 /* WeatherViewController.swift */,
 				FF21F4F51DA81B1C0064EB90 /* AddNewWeatherLocationViewController.swift */,
+				FF6966821DDF308300B671FB /* WeatherData.swift */,
+				FF584C4E1DEEC88600AF5547 /* WeatherDataApi.swift */,
 			);
 			name = Weather;
 			sourceTree = "<group>";
@@ -337,11 +358,16 @@
 				FF7D73751DC2402B00C37C5C /* ConversionInfo.swift in Sources */,
 				FF21F5091DA81B1C0064EB90 /* AddClockLocationViewController.swift in Sources */,
 				FF67A3B31DB772CD00ABC326 /* CurrencySelectorTableViewCell.swift in Sources */,
+				FF5552F41DE5231200469924 /* GmtOffsetInfo.swift in Sources */,
 				FF21F5181DA81B1C0064EB90 /* World_Traveler_s_App.xcdatamodeld in Sources */,
 				FF21F50F1DA81B1C0064EB90 /* ClockTableViewCell.swift in Sources */,
 				FF21F5151DA81B1C0064EB90 /* TranslatorViewController.swift in Sources */,
+				FF6966831DDF308300B671FB /* WeatherData.swift in Sources */,
+				FF6966811DDF2F1500B671FB /* WeatherInfo.swift in Sources */,
 				FF9F099C1DB8FB6300A54028 /* CurrencySection.swift in Sources */,
 				FF21F5111DA81B1C0064EB90 /* CurrencyTableViewCell.swift in Sources */,
+				FF584C4F1DEEC88600AF5547 /* WeatherDataApi.swift in Sources */,
+				FFC6407A1DE87DC400A74E6A /* GmtOffset.swift in Sources */,
 				FFCEF3D61DB7C4440068513B /* CurrencySectionsData.swift in Sources */,
 				FFD224621DD1F9B3008587BA /* SelectLanguageViewController.swift in Sources */,
 				FF66AEA21DCF66990036FDC2 /* SelectedCurrencySettings.swift in Sources */,
@@ -357,12 +383,14 @@
 				FFAE2D9A1DB6462B001C1FA1 /* BlurVisualEffectViewController.swift in Sources */,
 				FFE54F381DD46CC000DF7530 /* TimeZoneInfo.swift in Sources */,
 				FFD224761DD35FF2008587BA /* Translate.swift in Sources */,
+				FF6E6EE51DEDBA7000C41A76 /* AlertsViewController.swift in Sources */,
 				FFD224601DD0AE28008587BA /* TimeString.swift in Sources */,
 				FF5435BA1DB3AE3200E28153 /* SelectCurrencyViewController.swift in Sources */,
 				FF66AE9D1DCE17A60036FDC2 /* Convert.swift in Sources */,
 				FFD2246C1DD22010008587BA /* LanguageInfo.swift in Sources */,
 				FF21F5141DA81B1C0064EB90 /* TranslationsTableViewCell.swift in Sources */,
 				FFE54F361DD46C5000DF7530 /* TimeZoneSection.swift in Sources */,
+				FFC6407C1DE87E1200A74E6A /* FirstTime.swift in Sources */,
 				FF21F5171DA81B1C0064EB90 /* WeatherViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

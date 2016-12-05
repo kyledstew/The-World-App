@@ -37,21 +37,22 @@
     </entity>
     <entity name="Weather" syncable="YES">
         <attribute name="current_temp" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="dt" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="humidity" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="icon" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="lat" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="location_name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="lon" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="sunrise" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="sunset" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="temp_max" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="temp_min" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="weather_description" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="TimeZones" positionX="-54" positionY="54" width="128" height="150"/>
         <element name="Currency_Conversions" positionX="-54" positionY="72" width="128" height="120"/>
         <element name="Currency_List" positionX="-54" positionY="72" width="128" height="105"/>
         <element name="Languages_List" positionX="-54" positionY="72" width="128" height="105"/>
+        <element name="TimeZones" positionX="-54" positionY="54" width="128" height="150"/>
         <element name="Translations" positionX="-54" positionY="72" width="128" height="30"/>
-        <element name="Weather" positionX="-54" positionY="-9" width="128" height="180"/>
+        <element name="Weather" positionX="-54" positionY="-9" width="128" height="195"/>
     </elements>
 </model>

@@ -15,7 +15,6 @@ class AddNewWeatherLocationViewController: UIViewController {
    
    var validLocation = false
    
-   @IBOutlet var noResultsFoundMessage: UILabel!
    @IBOutlet var locationInput: UITextField!
    @IBOutlet var loader: UIActivityIndicatorView!
    
@@ -24,18 +23,46 @@ class AddNewWeatherLocationViewController: UIViewController {
       closePopup()
       
    }
+
    
    @IBAction func addButton(_ sender: AnyObject) {
+      
+      search()
+      
+   }
+   
+   func search() {
       
       if locationInput.text != "" {
          
          loader.startAnimating()
-         noResultsFoundMessage.isHidden = true
-         getData(locationInput: locationInput.text!)
+         
+         WeatherDataApi().getWeatherData(location: locationInput.text!, completeHandler: { (success, errorType, message) in
+            
+            if success {
+               
+               self.loader.stopAnimating()
+               NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AddWeatherLocationPopupClosed"), object: nil)
+               self.closePopup()
+               
+            } else {
+               
+               self.loader.stopAnimating()
+               AlertsViewController().errorMessage(currentViewController: self, errorType: errorType, message: message)
+               self.locationInput.text = ""
+               
+            }
+            
+         })
+         
+      } else {
+         
+         AlertsViewController().errorMessage(currentViewController: self, errorType: "generic", message: "Please enter a city")
          
       }
       
    }
+   
    override func viewDidLoad() {
       super.viewDidLoad()
       
@@ -59,191 +86,6 @@ class AddNewWeatherLocationViewController: UIViewController {
       
    }
    
-   // Get Data for the location entered
-   func getData(locationInput: String) {
-      
-      let encodedURL = locationInput.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlFragmentAllowed)
-      
-      let urlString = "http://api.openweathermap.org/data/2.5/weather?q=" + encodedURL! +  "&appid=" + APIKeys().getWeatherAPIKey() + "&units=metric"
-      
-      let url = URL(string: urlString)
-      
-      let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
-         
-         if error != nil {
-            
-            print(error)
-            
-         } else {
-            
-            if let urlContent = data {
-               
-               do {
-                  
-                  let jsonResult = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String: AnyObject]
-                  
-                  if (jsonResult["message"] as? String) != nil {
-                     
-                     print("Location not found")
-                     
-                  } else {
-                     
-                     if let locationName = jsonResult["name"] as? String {
-                        
-                        print(locationName + locationInput)
-                        
-                        if !self.dataExists(locationName: (locationName)) {
-                           
-                           if locationName == self.locationInput.text!.capitalized ||
-                              locationName + " " == self.locationInput.text!.capitalized
-                              
-                           { // Sometimes the result is different then what we searched. Make sure it's the same!
-                              
-                              if let lon = jsonResult["coord"]?["lon"] as? Double {
-                                 
-                                 if let lat = jsonResult["coord"]?["lat"] as? Double {
-                                    
-                                    var weatherDescription = ""
-                                    var icon = ""
-                                    
-                                    let weatherDescriptionArray = jsonResult["weather"] as! [[String: AnyObject]]
-                                    
-                                    for wda in weatherDescriptionArray {
-                                       
-                                       weatherDescription = wda["description"] as! String
-                                       icon = wda["icon"] as! String
-                                       
-                                    }
-                                    
-                                    if let mainArray = jsonResult["main"] {
-                                       
-                                       self.validLocation = true
-                                       
-                                       let currentTemp = mainArray["temp"]!
-                                       
-                                       let humidity = mainArray["humidity"]!
-                                       
-                                       let tempMin = mainArray["temp_min"]!
-                                       
-                                       let tempMax = mainArray["temp_max"]
-                                       
-                                       let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                                       let context = appDelegate.persistentContainer.viewContext
-                                       let weatherInfo = NSEntityDescription.insertNewObject(forEntityName: "Weather", into: context)
-                                       weatherInfo.setValue(locationName, forKey: "location_name")
-                                       weatherInfo.setValue(lat, forKey: "lat")
-                                       weatherInfo.setValue(lon, forKey: "lon")
-                                       weatherInfo.setValue(weatherDescription, forKey: "weather_description")
-                                       weatherInfo.setValue(icon, forKey: "icon")
-                                       weatherInfo.setValue(currentTemp!, forKey: "current_temp")
-                                       weatherInfo.setValue(humidity!, forKey: "humidity")
-                                       weatherInfo.setValue(tempMin!, forKey: "temp_min")
-                                       weatherInfo.setValue(tempMax!, forKey: "temp_max")
-                                       
-                                       do {
-                                          
-                                          try context.save()
-                                          
-                                          print("Saved")
-                                          
-                                       } catch {
-                                          
-                                          print("There was an error")
-                                          
-                                       }
-                                       
-                                       DispatchQueue.main.sync(execute: {
-                                          NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadWeatherTable"), object: nil)
-                                          self.dismiss(animated: true, completion: nil)
-                                          
-                                       })
-                                       
-                                    }
-                                    
-                                 }
-                              }
-                           }
-                           
-                        } else {    // DATA ALREADY EXISTS
-                           
-                           self.closePopup()
-                           
-                        }
-                        
-                     }
-                     
-                  }
-                  
-                  DispatchQueue.main.sync(execute: {
-                     
-                     if !self.validLocation {
-                        
-                        self.loader.stopAnimating()
-                        self.noResultsFoundMessage.isHidden = false
-                        self.locationInput.text = ""
-                        
-                     }
-                     
-                  })
-                  
-               } catch {
-                  print("Error processing failed")
-               }
-               
-            }
-            
-         }
-         
-      }
-      
-      task.resume()
-      
-   }
-   
-   func dataExists(locationName: String) -> Bool {
-      
-      var exists = false
-      
-      let appDelegate = UIApplication.shared.delegate as! AppDelegate
-      let context = appDelegate.persistentContainer.viewContext
-      let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Weather")
-      
-      request.predicate = NSPredicate(format: "location_name = %@", locationName)
-      
-      request.returnsObjectsAsFaults = false
-      
-      do {
-         
-         let results = try context.fetch(request)
-         
-         if results.count > 0 {
-            
-            for result in results as! [NSManagedObject] {
-               
-               if result.value(forKey: "location_name") != nil
-               {
-                  
-                  exists = true
-                  
-               }
-               
-            }
-            
-         } else {
-            
-            print("No Results")
-            
-         }
-         
-      } catch {
-         
-         print("Couldn't get Data")
-         
-      }
-      
-      return exists
-      
-   }
    
    // Manage Keyboard, let the user exit
    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -252,6 +94,8 @@ class AddNewWeatherLocationViewController: UIViewController {
    
    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
       textField.resignFirstResponder()
+      
+      search()
       
       return true
    }

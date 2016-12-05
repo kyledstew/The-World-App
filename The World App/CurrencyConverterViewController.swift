@@ -14,12 +14,11 @@ class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UI
    // VARIABLES //
    var isFirstTime = true
    
-   var conversionsData = ConversionsData()
-   
    var sourceCurrencySelected = true
    
-   var conversions = [Int: ConversionInfo] ()
-   var isSourceCurrency = true // keep track of which currency changed
+   var conversions = ConversionsData().loadConversions()
+   
+   var refresher: UIRefreshControl!
    
    // UI ITEMS //
    @IBOutlet var sourceCurrencyButton: UIButton!
@@ -37,14 +36,6 @@ class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UI
    // UI VIEWS //
    @IBOutlet var currencyConversionView: UIView!
    @IBOutlet var loaderView: UIView!
-   
-   // UI ITEM FUNCS //
-   @IBAction func refreshConversions(_ sender: Any) {
-      
-      callRefresh()
-
-      
-   }
    
    @IBAction func sourceCurrencyButtonPressed(_ sender: AnyObject) {
       
@@ -87,10 +78,9 @@ class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UI
          clickSaveConversionPrompt.isHidden = true
          updatedTime.isHidden = false
          
-         if conversionsData.saveConversion(sourceAmount: Double(sourceAmount.text!)!, sourceCurrency: sourceCurrencyButton.currentTitle!, targetAmount: Double(targetAmount.text!)!, targetCurrency: targetCurrencyButton.currentTitle!) {
+         if ConversionsData().saveConversion(sourceAmount: Double(sourceAmount.text!)!, sourceCurrency: sourceCurrencyButton.currentTitle!, targetAmount: Double(targetAmount.text!)!, targetCurrency: targetCurrencyButton.currentTitle!) {
          
-            conversions = conversionsData.loadConversions()
-            conversionsTable.reloadData()
+            swipeToRefresh()
             
             print("Saved Successfully")
             
@@ -99,15 +89,46 @@ class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UI
       
    }
    
-   func callRefresh() {
+   func swipeToRefresh() {
       
-      conversionsData.refreshConversions(conversions: conversions, completeHandler: {
+      refresher = UIRefreshControl()
+      conversions = ConversionsData().loadConversions()
+      
+      if conversions.count > 0 && !refresher.isRefreshing {
          
-         self.conversions = self.conversionsData.loadConversions()
-         self.updatedTime.text = "Updated " + TimeString().getTimeString().updatedTime
-         self.conversionsTable.reloadData()
+         refresher.attributedTitle = NSAttributedString(string: "Pull to refresh")
          
-      })
+         refresher.addTarget(self, action: #selector(refreshData), for: UIControlEvents.valueChanged)
+         
+         conversionsTable.addSubview(refresher)
+         
+         refreshData()
+         
+      }
+      
+      
+   }
+   
+   func refreshData() {
+      
+      ConversionsData().refreshConversions { (success, errorType, message) in
+
+         if success {
+            
+            self.conversions = ConversionsData().loadConversions()
+            self.updatedTime.text = "Updated " + TimeString().getTimeString().updatedTime
+            self.conversionsTable.reloadData()
+            
+         } else {
+            
+            AlertsViewController().errorMessage(currentViewController: self, errorType: errorType, message: message)
+            
+         }
+
+         self.refresher.endRefreshing()
+         
+      }
+      
       
    }
    
@@ -120,17 +141,25 @@ class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UI
          
          var conversionInfo = ConversionInfo(sourceAmount: Double(sourceAmount.text!)!, sourceCurrency: sourceCurrencyButton.currentTitle!, targetAmount: nil, targetCurrency: targetCurrencyButton.currentTitle!)
          
-         let convert = Convert()
-         
-         convert.getExchangeRate(conversionInfo: conversionInfo, completionHandler: {(targetAmount:Double) in
+         Convert().getExchangeRate(conversionInfo: conversionInfo, completionHandler: { (targetAmount, success, errorType, message) in
             
-            self.targetAmountLoader.stopAnimating()
-            
-            conversionInfo.targetAmount = targetAmount
-            
-            self.targetAmount.text = String(format: "%.2f", conversionInfo.targetAmount!)
+            if success{
+               
+               self.targetAmountLoader.stopAnimating()
+               
+               conversionInfo.targetAmount = targetAmount
+               
+               self.targetAmount.text = String(format: "%.2f", conversionInfo.targetAmount!)
+               
+            } else {
+               
+               AlertsViewController().errorMessage(currentViewController: self, errorType: errorType, message: message)
+               
+            }
             
          })
+         
+
          
       } else {
          
@@ -164,21 +193,25 @@ class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UI
          loader.startAnimating()
          currencyConversionView.isHidden = true
          
-         CurrencyDataAPI().getCurrencyList(completionHandler: {() -> Void in
+         CurrencyDataAPI().getCurrencyList(completionHandler: {( success, errorType, message ) -> Void in
          
-            self.currencyConversionView.isHidden = false
-            self.loader.stopAnimating()
+            if success {
+            
+               self.currencyConversionView.isHidden = false
+               self.loader.stopAnimating()
+            
+            } else {
+               
+               self.loader.stopAnimating()
+               AlertsViewController().errorMessage(currentViewController: self, errorType: errorType, message: message)
+               
+            }
          
          })
          
       } else {
          
-         conversions = ConversionsData().loadConversions()
-         if conversions.count > 0 {
-            clickSaveConversionPrompt.isHidden = true
-            updatedTime.isHidden = false
-         }
-         callRefresh()
+         swipeToRefresh()
          
       }
       
@@ -215,6 +248,11 @@ class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UI
    
    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
       
+      if conversions.count > 0 {
+         clickSaveConversionPrompt.isHidden = true
+         updatedTime.isHidden = false
+      }
+      
       return conversions.count
       
    }
@@ -242,7 +280,7 @@ class CurrencyConverterViewController: UIViewController, UITableViewDelegate, UI
          
          let timestamp = Array(conversions.keys).sorted(by: sortFunc)[indexPath.row]
          
-         conversionsData.deleteConversion(timestamp: timestamp)
+         ConversionsData().deleteConversion(timestamp: timestamp)
          conversions[timestamp] = nil
          
          conversionsTable.reloadData()

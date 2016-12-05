@@ -11,12 +11,13 @@ import CoreData
 
 class AddClockLocationViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
    
-   var timeZones = [String: String] ()
+   var timeZones = [String: GmtOffsetInfo] ()
    var sectionName = "Country"
    var selectedCountry = ""
    
    @IBOutlet var timeZonesTable: UITableView!
    @IBOutlet var searchBar: UISearchBar!
+   @IBOutlet var loader: UIActivityIndicatorView!
    @IBAction func cancelButton(_ sender: Any) {
       
       if sectionName == "Country" {
@@ -75,13 +76,19 @@ class AddClockLocationViewController: UIViewController, UITableViewDataSource, U
    //               !!!TABLE FUNCTIONS!!!
    /***************************************************************/
    
-
-   
    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
       
       if sectionName == "Country" {
          
-         return removeDuplicates(array: Array(timeZones.values)).count
+         var countries = [String] ()
+         
+         for values in timeZones.values {
+            
+            countries.append(values.countryName!)
+            
+         }
+         
+         return removeDuplicates(array: countries).count
          
       } else {
          
@@ -102,8 +109,16 @@ class AddClockLocationViewController: UIViewController, UITableViewDataSource, U
       var tempArray = [String] ()
       
       if sectionName == "Country" {
+         
+         var countries = [String] ()
+         
+         for values in timeZones.values {
+            
+            countries.append(values.countryName!)
+            
+         }
       
-         tempArray = removeDuplicates(array: Array(timeZones.values).sorted())
+         tempArray = removeDuplicates(array: countries).sorted()
       
       } else {
          
@@ -125,7 +140,15 @@ class AddClockLocationViewController: UIViewController, UITableViewDataSource, U
       
       if sectionName == "Country" {
          
-         tempArray = removeDuplicates(array: Array(timeZones.values).sorted())
+         var countries = [String] ()
+         
+         for values in timeZones.values {
+            
+            countries.append(values.countryName!)
+            
+         }
+         
+         tempArray = removeDuplicates(array: countries.sorted())
          selectedCountry = tempArray[indexPath.row]
          
          timeZones = TimeZoneData().loadTimeZones(countrySearchText: selectedCountry)
@@ -135,10 +158,30 @@ class AddClockLocationViewController: UIViewController, UITableViewDataSource, U
          
       } else {
          
+         loader.startAnimating()
+         
          tempArray = Array(timeZones.keys).sorted()
-         print(tempArray[indexPath.row])
-         setActiveTrue(locationName: tempArray[indexPath.row])
-         closePopup()
+         
+         var selectedValue = tempArray[indexPath.row]
+      
+         TimeZoneData().setActiveTrue(locationName: selectedValue)
+         GmtOffset().checkGmtOffset(locationName: selectedValue, gmtOffset: (timeZones[selectedValue]?.gmtOffset)!, zoneName: (timeZones[selectedValue]?.zoneName)!, completionHandler: { (noChange, isSuccess) in
+            
+            if noChange {
+               
+               print("No change to " + Array(self.timeZones.keys).sorted()[indexPath.row])
+               
+            } else {
+               
+               print("Updated GmtOffset for " + Array(self.timeZones.keys).sorted()[indexPath.row])
+               
+            }
+            
+            self.loader.stopAnimating()
+            self.closePopup()
+            
+         })
+         
          
       }
 
@@ -176,53 +219,6 @@ class AddClockLocationViewController: UIViewController, UITableViewDataSource, U
       return arrayNoDuplicates
    }
    
-   // SAVE ACTIVE VAR TO TRUE IN CORE DATA //
-   func setActiveTrue(locationName: String) {
-      
-      let appDelegate = UIApplication.shared.delegate as! AppDelegate
-      let context = appDelegate.persistentContainer.viewContext
-      let request = NSFetchRequest<NSFetchRequestResult>(entityName: "TimeZones")
-      
-      request.returnsObjectsAsFaults = false
-      request.predicate = NSPredicate(format: "location_name = %@", locationName)
-      
-      do {
-         
-         let results = try context.fetch(request)
-         
-         if results.count > 0 {
-            
-            for result in results as! [NSManagedObject] {
-               
-               result.setValue(true, forKey: "active")
-               print(locationName + " set to active")
-               
-               do {
-                  
-                  try context.save()
-                  
-                  print("Saved")
-                  
-                  NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadClocksTable"), object: nil)
-                  self.dismiss(animated: true, completion: nil)
-                  
-               } catch {
-                  
-                  print("There was an error saving")
-                  
-               }
-               
-            }
-            
-         }
-         
-      } catch {
-         
-         print("No Results")
-         
-      }
-      
-   }
    
    /*
     

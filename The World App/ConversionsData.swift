@@ -135,17 +135,37 @@ class ConversionsData {
       
    }
 
-   func refreshConversions(conversions: [Int: ConversionInfo], completeHandler: @escaping () -> Void) {
+   func refreshConversions(completeHandler: @escaping (_ success: Bool, _ errorType: String, _ message: String) -> Void) {
+      
+      var success = false
+      var errorType = "generic"
+      var message = "An unknown error occurred. Please try again."
+      
+      let conversions = ConversionsData().loadConversions()
       
       for (timestamp, info) in conversions {
          
          var newData = ConversionInfo(sourceAmount: info.sourceAmount, sourceCurrency: info.sourceCurrency, targetAmount: nil, targetCurrency: info.targetCurrency)
          
-         Convert().getExchangeRate(conversionInfo: newData, completionHandler: {(newTargetAmount:Double) in
+         Convert().getExchangeRate(conversionInfo: newData, completionHandler: {(newTargetAmount, success_get, errorType_get, message_get) in
+            
+            if success_get {
+               
+               success = true
+               errorType = ""
+               message = ""
+               
+               newData.targetAmount = newTargetAmount
+               self.updateCoreData(conversion: newData, timestamp: timestamp)
+               
+            } else {
+               
+               errorType = errorType_get
+               message = message_get
+               
+            }
          
-            newData.targetAmount = newTargetAmount
-            self.updateCoreData(conversion: newData, timestamp: timestamp)
-            completeHandler()
+            completeHandler(success, errorType, message)
          
          })
          

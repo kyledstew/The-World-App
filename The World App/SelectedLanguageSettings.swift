@@ -55,7 +55,9 @@ class SelectedLanguageSettings {
       
          UserDefaults.standard.set(newSourceLanguage, forKey: "sourceLanguage")
       
-      } else if newTargetLanguage != "" {
+      }
+      
+      if newTargetLanguage != "" {
       
          UserDefaults.standard.set(newTargetLanguage, forKey: "targetLanguage")
          

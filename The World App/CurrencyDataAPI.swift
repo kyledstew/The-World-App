@@ -12,7 +12,11 @@ import CoreData
 class CurrencyDataAPI {
    
    // GET LIST OF CURRENCIES FROM API - ONLY USED FIRST TIME APP RUNS //
-   func getCurrencyList(completionHandler:@escaping () -> Void ) {
+   func getCurrencyList(completionHandler:@escaping (_ success: Bool, _ errorType: String, _ message: String) -> Void ) {
+      
+      var success = false
+      var errorType = "generic"
+      var message = "An unkown error occurred. Please try again."
       
       var currencies = [String: String] ()
       
@@ -22,7 +26,10 @@ class CurrencyDataAPI {
          
          if error != nil {
             
-            print(error)
+            errorType = "connection_error"
+            message = "Unable to download currency data. Please make sure The World App has access to cellular data"
+            
+            print(error!)
             
          } else {
             
@@ -40,23 +47,6 @@ class CurrencyDataAPI {
                      
                   }
                   
-                  
-                  DispatchQueue.main.sync(execute: {
-                     
-                     if self.saveToCoreData(currencies: currencies) {
-                        
-                        UserDefaults.standard.set(false, forKey: "isFirstTimeLoadingCurrencies")
-                        completionHandler()
-                        
-                     } else {
-                        
-                        print("ERROR SAVING DATA")
-                        
-                     }
-                     
-                  })
-                  
-                  
                } catch {
                   
                   print("Error processing data")
@@ -66,6 +56,25 @@ class CurrencyDataAPI {
             }
             
          }
+         
+         DispatchQueue.main.sync(execute: {
+            
+            if self.saveToCoreData(currencies: currencies) {
+               
+               success = true
+               errorType = ""
+               message = ""
+               UserDefaults.standard.set(false, forKey: "isFirstTimeLoadingCurrencies")
+               
+            } else {
+               
+               message = "An error occurred when saving Data. Please try again."
+               
+            }
+            
+            completionHandler(success, errorType, message)
+            
+         })
          
       }
       task.resume()

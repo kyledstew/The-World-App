@@ -55,7 +55,9 @@ class SelectedCurrencySettings {
          
          UserDefaults.standard.set(newSourceCurrency, forKey: "sourceCurrency")
       
-      } else if newTargetCurrency != "" {
+      }
+      
+      if newTargetCurrency != "" {
          
          UserDefaults.standard.set(newTargetCurrency, forKey: "targetCurrency")
          

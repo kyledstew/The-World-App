@@ -11,7 +11,12 @@ import UIKit
 class Convert{
 
    // GET EXCHANGE RATE FOR SOURCE AND TARGET CURRENCIES//
-   func getExchangeRate(conversionInfo: ConversionInfo, completionHandler:@escaping (_ targetAmount: Double) -> Void ) {
+   func getExchangeRate(conversionInfo: ConversionInfo, completionHandler:@escaping (_ targetAmount: Double, _ success: Bool, _ errorType: String, _ message: String) -> Void ) {
+      
+      var targetAmount = 0.0
+      var success = false
+      var errorType = "generic"
+      var message = "An unknown error occurred. Please try again."
       
       var sourceRate = 0.0
       var targetRate = 0.0
@@ -22,7 +27,9 @@ class Convert{
          
          if error != nil {
             
-            print(error)
+            errorType = "connection_error"
+            message = "Unable to download current exchange rates. Please make sure The World App has access to cellular data"
+            print(error!)
             
          } else {
             
@@ -33,11 +40,9 @@ class Convert{
                   let jsonResult = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String: AnyObject]
                   
                   let currenciesArray = jsonResult["quotes"] as! [String: Double]
-                  
                   print(currenciesArray)
                   
                   for (currency, rate) in currenciesArray {
-                     
                      
                      if currency == "USD" + conversionInfo.sourceCurrency! {
                         
@@ -55,14 +60,10 @@ class Convert{
                      
                   }
                   
-                  DispatchQueue.main.sync(execute: {
-                     
-                     let targetAmount = self.convert(info: conversionInfo, sourceRate: sourceRate, targetRate: targetRate)
-                     
-                     completionHandler(targetAmount)
-                     
-                  })
-                  
+                  targetAmount = self.convert(info: conversionInfo, sourceRate: sourceRate, targetRate: targetRate)
+                  success = true
+                  errorType = ""
+                  message = ""
                   
                } catch {
                   
@@ -73,6 +74,12 @@ class Convert{
             }
             
          }
+         
+         DispatchQueue.main.sync(execute: {
+            
+            completionHandler(targetAmount, success, errorType, message)
+            
+         })
          
       }
       task.resume()

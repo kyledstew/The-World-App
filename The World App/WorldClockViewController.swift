@@ -13,20 +13,8 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
    
    // VARIABLES //
    private var timer = Timer()
-   var timeZones = [String: GmtOffset] ()  // Key is the location_name, and gmt_offset is the value
+   var timeZones = [String: GmtOffsetInfo] ()  // Key is the location_name
    var currentMinute: Int?
-   var firstTime = true
-   var firstTimeLoadComplete = false
-   struct GmtOffset {
-      
-      var countryCode: String?
-      var countryName: String?
-      var gmtOffset: Int?
-      var zoneName: String?
-      var timestamp: Int?
-      var updated = false
-      
-   }
    
    // UI ITEMS //
    @IBOutlet var table: UITableView!
@@ -39,19 +27,32 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       super.viewDidLoad()
       
       // If first time loading app, we need to pull all the data.
-      if let temp = UserDefaults.standard.object(forKey: "firstTimeLoadingTimeZones") as? Bool {
+      if (UserDefaults.standard.object(forKey: "firstTimeLoadingTimeZones") as? Bool) == nil {
          
-         firstTime = temp
+         loader.startAnimating()
          
-      }
-      
-      if firstTime {
-         
-         getTimeZoneInfo()
+         FirstTime().getTimeZoneInfo(completionHandler: {( success, errorType, message ) -> Void in
+            
+            if success {
+               
+               self.addLocationButton.isEnabled = true
+               self.loader.stopAnimating()
+               
+            } else {
+               
+               self.loader.stopAnimating()
+               AlertsViewController().errorMessage(currentViewController: self, errorType: errorType, message: message)
+               
+            }
+            
+         })
          
       } else {
          
-         loadTimeZones()
+         reloadActiveTimeZones()
+         
+         checkGmtOffset()
+
          addLocationButton.isEnabled = true
          
       }
@@ -59,28 +60,62 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       // Update the time every second
       timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(WorldClockViewController.updateTime), userInfo: nil, repeats: true)
       
-      NotificationCenter.default.addObserver(self, selector: #selector(WorldClockViewController.loadTimeZones),name:NSNotification.Name(rawValue: "AddTimeZonePopupClosed"), object: nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(reloadActiveTimeZones), name: NSNotification.Name(rawValue: "AddTimeZonePopupClosed"), object: nil)
+      
+
+      
+   }
+   
+   func checkGmtOffset(i: Int = 0) {
+      
+      var tempArray = Array(timeZones.keys).sorted()
+      
+      if i < tempArray.count && tempArray.count != 0 {
+      
+         print("Check " + tempArray[i])
+               
+            GmtOffset().checkGmtOffset(locationName: tempArray[i], gmtOffset: (timeZones[tempArray[i]]?.gmtOffset!)!, zoneName: (timeZones[tempArray[i]]?.zoneName!)!, completionHandler: { (noChange, isSuccess) in
+                  
+                  if isSuccess {
+                  
+                     if !noChange {
+                     
+                        self.timeZones = TimeZoneData().loadActiveTimeZones()
+                     
+                     }
+                  
+                     self.checkGmtOffset(i: i+1)
+                     
+                  } else {
+                     
+                     print("Try again")
+                     
+                     self.checkGmtOffset(i: i)
+                     
+                  }
+                  
+               })
+   
+         self.reloadActiveTimeZones()
+      }
+   
+   }
+   
+
+   func reloadActiveTimeZones() {
+      
+      BlurVisualEffectViewController().disableBlur(temp: self)
+      
+      timeZones = TimeZoneData().loadActiveTimeZones()
+      
+      table.reloadData()
       
    }
    
    // VIEWDIDAPPEAR //
    override func viewDidAppear(_ animated: Bool) {
-
-      if !firstTime {
-         
-         loadTimeZones()
-         
-         if timeZones.count == 0 {
-            
-            loader.stopAnimating()
-            
-         } else {
-            
-            addClockPrompt.isHidden = true
-            
-         }
-         
-      }
+      
+      reloadActiveTimeZones()
       
    }
    
@@ -94,377 +129,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       
    }
    
-   /***************************************************************/
-   // loadTimeZones(), pulls all timeZones that have a active of true set
-   // then checks to see if gmtOffset has changed (daylight savings)
-   /***************************************************************/
-   func loadTimeZones() {
-      
-      BlurVisualEffectViewController().disableBlur(temp: self)
-      loader.startAnimating()
-      
-      let appDelegate = UIApplication.shared.delegate as! AppDelegate
-      let context = appDelegate.persistentContainer.viewContext
-      let request = NSFetchRequest<NSFetchRequestResult>(entityName: "TimeZones")
-      
-      request.returnsObjectsAsFaults = false
-      request.predicate = NSPredicate(format: "active == true")
-      
-      do {
-         
-         let results = try context.fetch(request)
-         
-         if results.count > 0 {
-            
-            addClockPrompt.isHidden = true
-            
-            for result in results as! [NSManagedObject] {
-               
-               if let locationName = result.value(forKey: "location_name") as? String {
-                  
-                  if let gmtOffset = result.value(forKey: "gmt_offset") as? Int {
-                     
-                     if let zoneName = result.value(forKey: "zone_name") as? String {
-                        
-                        if zoneName == "Pacific/Pago_Pago" {
-                           
-                           print(zoneName + " \(gmtOffset)")
-                           
-                        }
-                        
-                        if timeZones[locationName] == nil { // If nil, it's new
-                           
-                           let temp = GmtOffset(countryCode: nil, countryName: nil, gmtOffset: gmtOffset, zoneName: zoneName, timestamp: nil, updated: true)
-                           
-                           self.timeZones[locationName] = temp
-                           checkGmtOffset(locationName: locationName, gmtOffset: gmtOffset, zoneName: zoneName)
-                           
-                        }
-                        
-                        loader.stopAnimating()
-                        table.reloadData()
-                        
-                     }
-                     
-                  }
-                  
-               }
-               
-            }
-            
-         } else {
-            
-            loader.stopAnimating()
-            print("No variables set to active")
-            
-         }
-         
-      } catch {
-         
-         print("No Data")
-         
-      }
-      
-   }
    
-   /***************************************************************/
-   // checkGmtOffset(), checks the current timeZones to make sure the
-   // gmtOffset hasn't changed
-   /***************************************************************/
-   func checkGmtOffset(locationName: String, gmtOffset: Int, zoneName: String) {
-      
-      let url = URL(string: "https://api.timezonedb.com/v2/get-time-zone?key=" + APIKeys().getClockAPIKey() + "&format=json&by=zone&zone=" + zoneName)
-      
-      let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
-         
-         if error != nil {
-            
-            print(error)
-            
-         } else {
-            
-            if let urlContent = data {
-               
-               do {
-                  
-                  let jsonResult = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String: AnyObject]
-                  
-                  if let currentGmtOffset = jsonResult["gmtOffset"] as? Int {
-                     
-                     print("Current \(currentGmtOffset)")
-                     
-                     let temp = GmtOffset(countryCode: nil, countryName: nil, gmtOffset: gmtOffset, zoneName: zoneName, timestamp: nil, updated: true)
-                     self.timeZones[locationName] = temp
-                     self.table.reloadData()
-                     self.loader.stopAnimating()
-                     
-                     if currentGmtOffset != gmtOffset { // if the currentGmtOffset is different,
-                        
-                        self.updateCoreData(zoneToChange: zoneName, newGmtOffset: currentGmtOffset) // update it
-                        print("gmtOffset different")
-                        
-                     } else {
-                        
-                        print("gmtOffset same")
-                        
-                        
-                     }
-                     
-                     
-                     
-                  }
-                  
-                  DispatchQueue.main.sync(execute: {
-                     
-                     
-                  })
-                  
-                  
-                  
-               } catch {
-                  
-                  print("error processing data")
-                  
-               }
-               
-            }
-         }
-         
-      }
-      task.resume()
-      
-   }
-   
-   /***************************************************************/
-   // updateCoreData(), updates the gmtOffset in core data.
-   // This is only called if it is different
-   /***************************************************************/
-   func updateCoreData(zoneToChange: String, newGmtOffset: Any) {
-      
-      let appDelegate = UIApplication.shared.delegate as! AppDelegate
-      let context = appDelegate.persistentContainer.viewContext
-      let request = NSFetchRequest<NSFetchRequestResult>(entityName: "TimeZones")
-      
-      request.predicate = NSPredicate(format: "zone_name = %@", zoneToChange)
-      
-      do {
-         
-         let results = try context.fetch(request)
-         
-         if results.count > 0 {
-            
-            for result in results as! [NSManagedObject] {
-               
-               result.setValue(newGmtOffset, forKey: "gmt_offset")
-               
-               do {
-                  
-                  try context.save()
-                  print("Time Zone Data Updated")
-                  
-               } catch {
-                  
-                  print("Update gmtoffset save failed")
-                  
-               }
-               
-            }
-            
-         }
-         
-      } catch {
-         
-         print("Error updating gmtOffset")
-         
-      }
-      
-   }
-   
-   /***************************************************************/
-   // setActiveFalse(), if clock is removed from table then set
-   // active to false in core data
-   /***************************************************************/
-   func setActiveFalse(zoneName: String) {
-      
-      let appDelegate = UIApplication.shared.delegate as! AppDelegate
-      let context = appDelegate.persistentContainer.viewContext
-      let request = NSFetchRequest<NSFetchRequestResult>(entityName: "TimeZones")
-      
-      request.returnsObjectsAsFaults = false
-      request.predicate = NSPredicate(format: "location_name = %@", zoneName)
-      
-      do {
-         
-         let results = try context.fetch(request)
-         
-         if results.count > 0 {
-            
-            for result in results as! [NSManagedObject] {
-               
-               result.setValue(false, forKey: "active")
-               
-               do {
-                  
-                  try context.save()
-                  
-               } catch {
-                  
-                  print("Change failed")
-                  
-               }
-               
-            }
-            
-         } else {
-            
-            print("No Results")
-            
-         }
-         
-      } catch {
-         
-         print("Couldn't get Data")
-         
-      }
-      
-   }
-   
-   /***************************************************************/
-   // getTimeZoneInfo(), only called first time the app is loaded.
-   // it gets all of the timezones support by the api
-   /***************************************************************/
-   func getTimeZoneInfo() {
-      
-      let url = URL(string: "https://api.timezonedb.com/v2/list-time-zone?key=" + APIKeys().getClockAPIKey() + "&format=json")
-      
-      let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
-         
-         if error != nil {
-            
-            print(error)
-            
-         } else {
-            
-            if let urlContent = data {
-               
-               do {
-                  
-                  var tempTimeZones = [String: GmtOffset] ()
-                  
-                  let jsonResult = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String: AnyObject]
-                  
-                  if let timeZonesArray = jsonResult["zones"] as? [[String: AnyObject]] {
-                     
-                     for timeZones in timeZonesArray {
-                        
-                        if let countryCode = timeZones["countryCode"] as? String {
-                           
-                           if let countryName = timeZones["countryName"] as? String {
-                              
-                              if let zoneName = timeZones["zoneName"] as? String {
-                                 
-                                 if let gmtOffset = timeZones["gmtOffset"] as? Int {
-                                    
-                                    if let timestamp = timeZones["timestamp"] as? Int {
-                                       
-                                       if zoneName == "Pacific/Pago_Pago" {
-                                          
-                                          print(zoneName + " \(gmtOffset)")
-                                          
-                                       }
-                                       
-                                       let temp = GmtOffset(countryCode: countryCode, countryName: countryName, gmtOffset: gmtOffset, zoneName: zoneName, timestamp: timestamp, updated: true)
-                                       tempTimeZones[self.getLocationName(zoneName: zoneName)] = temp
-                                       
-                                    }
-                                    
-                                 }
-                                 
-                              }
-                              
-                           }
-                           
-                        }
-                        
-                     }
-                     
-                     DispatchQueue.main.sync(execute: {
-                        
-                        if self.saveToCoreData(tempTimeZones: tempTimeZones) {
-                           self.firstTime = false
-                           UserDefaults.standard.set(self.firstTime, forKey: "firstTimeLoadingTimeZones")
-                        }
-                        
-                     })
-                     
-                  }
-                  
-               } catch {
-                  
-                  print("error processing data")
-                  self.getTimeZoneInfo()
-                  
-               }
-               
-            }
-         }
-         
-      }
-      task.resume()
-      
-   }
-   
-   /***************************************************************/
-   // saveToCoreData(), to be run after getting JSON file with
-   // all of the time zones
-   /***************************************************************/
-   func saveToCoreData(tempTimeZones: [String: GmtOffset]) -> Bool {
-      
-      var isSuccess = false
-      
-      var numberOfTimeZones = 0
-      
-      for (locationName, info) in tempTimeZones {
-         
-         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-         let context = appDelegate.persistentContainer.viewContext
-         let data = NSEntityDescription.insertNewObject(forEntityName: "TimeZones", into: context)
-         
-         data.setValue(info.countryCode, forKey: "country_code")
-         data.setValue(info.countryName, forKey: "country_name")
-         data.setValue(info.zoneName, forKey: "zone_name")
-         data.setValue(info.gmtOffset, forKey: "gmt_offset")
-         data.setValue(info.timestamp, forKey: "timestamp")
-         data.setValue(locationName, forKey: "location_name")
-         data.setValue(false, forKey: "active")
-         
-         if info.zoneName == "Pacific/Pago_Pago" {
-            
-            print(info.zoneName! + " \(info.gmtOffset)")
-            
-         }
-         
-         do {
-            
-            try context.save()
-            isSuccess = true
-            numberOfTimeZones += 1
-            
-         } catch {
-            
-            print("There was an error " + locationName)
-            
-         }
-      }
-      
-      print("\(numberOfTimeZones) Time Zones Saved")
-      
-      self.loadTimeZones()
-      self.addLocationButton.isEnabled = true
-      
-      return isSuccess
-      
-   }
    
    /***************** Functions to check whether time has changed ****************/
    func updateTime() {
@@ -508,69 +173,15 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       // Dispose of any resources that can be recreated.
    }
    
-   /***************************************************************/
-   // getLocationName(), splits the zone name to get the last name
-   // E.g., Name1/Name2/Name3, it returns Name3 to be used in picker
-   /***************************************************************/
-   func getLocationName(zoneName: String) -> String {
-      
-      var locationName = ""
-      
-      let temp: NSString? = zoneName as NSString?  // Get the key to split up
-      
-      if let stringArray = temp?.components(separatedBy: "/") { // split by character /
-         
-         locationName = stringArray.last! // Get the last element
-      }
-      
-      return locationName.replacingOccurrences(of: "_", with: " ")
-      
-   }
-   
-   /***************************************************************/
-   // deleteAllData(), deletes all the data in a specific entity
-   // used for testing purposes
-   /***************************************************************/
-   func deleteAllData(entity: String)
-   {
-      let appDelegate = UIApplication.shared.delegate as! AppDelegate
-      let managedContext = appDelegate.persistentContainer.viewContext
-      let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
-      fetchRequest.returnsObjectsAsFaults = false
-      
-      var i = 1
-      
-      do
-      {
-         let results = try managedContext.fetch(fetchRequest)
-         if results.count > 0 {
-            for managedObject in results
-            {
-               let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-               managedContext.delete(managedObjectData)
-               print("Deleted \(i)")
-               i += 1
-            }
-         }
-         
-         do {
-            try managedContext.save()
-            
-            print("SAVED")
-         } catch {
-            
-            
-         }
-      } catch let error as NSError {
-         print("Detele all data in \(entity) error : \(error) \(error.userInfo)")
-      }
-   }
-   
-
-   
    /************************* TABLE FUNCTIONS *********************************/
    
    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+      
+      if timeZones.count > 0 {
+         
+         addClockPrompt.isHidden = true
+         
+      }
       
       return timeZones.count
       
@@ -584,6 +195,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
       
       cell.locationNameLabel.text = timeZonesArray[indexPath.row]
       cell.timeLabel.text = String(TimeString().getTimeString(gmtOffset: (timeZones[timeZonesArray[indexPath.row]]?.gmtOffset!)!).timeString)
+      
       cell.dateLabel.text = String(TimeString().getTimeString(gmtOffset: (timeZones[timeZonesArray[indexPath.row]]?.gmtOffset!)!).dateString)
       
       
@@ -598,7 +210,7 @@ class WorldClockViewController: UIViewController, UITableViewDataSource, UITable
          
          let zoneName = Array(timeZones.keys).sorted()[indexPath.row]
          
-         setActiveFalse(zoneName: zoneName)
+         TimeZoneData().setActiveFalse(zoneName: zoneName)
          timeZones[zoneName] = nil
          
          table.reloadData()
