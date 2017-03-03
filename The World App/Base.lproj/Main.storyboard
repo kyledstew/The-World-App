@@ -87,7 +87,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sep 28, 2016" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QRr-OB-OsV">
-                                                            <rect key="frame" x="222" y="56" width="124" height="31"/>
+                                                            <rect key="frame" x="222" y="55" width="124" height="31"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="31" id="TSG-dG-502"/>
                                                                 <constraint firstAttribute="width" constant="124" id="jRe-os-cdQ"/>
@@ -161,7 +161,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mbp-ub-14k" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1273" y="81"/>
+            <point key="canvasLocation" x="1272.8" y="80.50974512743629"/>
         </scene>
         <!--Translator-->
         <scene sceneID="gn4-tn-lvr">
@@ -1226,6 +1226,13 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="359" height="99"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="10d.png" translatesAutoresizingMaskIntoConstraints="NO" id="VCb-2W-WwF">
+                                                            <rect key="frame" x="187" y="8" width="70" height="70"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="70" id="Oxf-fH-qhl"/>
+                                                                <constraint firstAttribute="width" constant="70" id="k08-81-ulu"/>
+                                                            </constraints>
+                                                        </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Salt Lake City" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9qH-lL-HRw">
                                                             <rect key="frame" x="13" y="8" width="175" height="84"/>
                                                             <constraints>
@@ -1258,11 +1265,13 @@
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstAttribute="trailing" secondItem="ENg-Ii-iko" secondAttribute="trailing" id="4iL-XW-4dS"/>
+                                                        <constraint firstItem="iiI-SU-rIe" firstAttribute="top" secondItem="VCb-2W-WwF" secondAttribute="bottom" constant="-13" id="7EO-Sz-0dY"/>
                                                         <constraint firstItem="ENg-Ii-iko" firstAttribute="top" secondItem="vet-tw-7rk" secondAttribute="top" constant="8" id="ENa-fv-yv7"/>
                                                         <constraint firstItem="9qH-lL-HRw" firstAttribute="top" secondItem="vet-tw-7rk" secondAttribute="top" constant="8" id="GfQ-Tq-Ve4"/>
                                                         <constraint firstAttribute="bottom" secondItem="9qH-lL-HRw" secondAttribute="bottom" constant="8" id="J6N-G6-CnF"/>
                                                         <constraint firstAttribute="trailingMargin" secondItem="iiI-SU-rIe" secondAttribute="trailing" constant="6" id="Lcf-Og-rNx"/>
                                                         <constraint firstItem="9qH-lL-HRw" firstAttribute="leading" secondItem="vet-tw-7rk" secondAttribute="leading" constant="13" id="ZZK-7U-xfM"/>
+                                                        <constraint firstItem="ENg-Ii-iko" firstAttribute="leading" secondItem="VCb-2W-WwF" secondAttribute="trailing" constant="-8" id="cvr-jA-8R8"/>
                                                         <constraint firstAttribute="bottomMargin" secondItem="iiI-SU-rIe" secondAttribute="bottom" constant="2.5" id="dbH-WE-Dsh"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
@@ -1270,6 +1279,7 @@
                                                     <outlet property="currentTempLabel" destination="ENg-Ii-iko" id="8M8-rj-KSN"/>
                                                     <outlet property="currentWeatherDescription" destination="iiI-SU-rIe" id="jQn-mu-CLK"/>
                                                     <outlet property="locationNameLabel" destination="9qH-lL-HRw" id="Ir7-Te-4gM"/>
+                                                    <outlet property="weatherIconImage" destination="VCb-2W-WwF" id="wsX-JN-2FH"/>
                                                 </connections>
                                             </tableViewCell>
                                         </prototypes>
@@ -1824,6 +1834,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="10d.png" width="50" height="50"/>
         <image name="Arrow" width="74" height="39"/>
         <image name="Check Mark" width="56" height="45"/>
         <image name="Clock Icon" width="30" height="30"/>

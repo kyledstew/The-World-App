@@ -20,7 +20,7 @@ class ConversionsData {
       let context = appDelegate.persistentContainer.viewContext
       let conversionInfo = NSEntityDescription.insertNewObject(forEntityName: "Currency_Conversions", into: context)
       
-      let timestamp = Int(NSDate().timeIntervalSince1970 * 1000)
+      let timestamp = Int64(NSDate().timeIntervalSince1970 * 1000)
       
       conversionInfo.setValue(timestamp, forKey: "timestamp")
       conversionInfo.setValue(sourceAmount, forKey: "source_amount")

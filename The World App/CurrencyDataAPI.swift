@@ -98,7 +98,7 @@ class CurrencyDataAPI {
          if abbreviation == "USD" || abbreviation == "JPY" {
             
             data.setValue(true, forKey: "recently_used")
-            data.setValue(Int(NSDate().timeIntervalSince1970), forKey: "timestamp_used")
+            data.setValue(Int64(NSDate().timeIntervalSince1970), forKey: "timestamp_used")
             
          } else {
             

@@ -19,8 +19,8 @@ class TranslationsData: UIViewController {
       let appDelegate = UIApplication.shared.delegate as! AppDelegate
       let context = appDelegate.persistentContainer.viewContext
       let data = NSEntityDescription.insertNewObject(forEntityName: "Translations", into: context)
-      
-      let timestamp = Int(NSDate().timeIntervalSince1970 * 1000)
+    
+      let timestamp = Int64(NSDate().timeIntervalSince1970 * 1000)
       
       data.setValue(timestamp, forKey: "timestamp")
       data.setValue(info.sourceLanguage, forKey: "source_language")

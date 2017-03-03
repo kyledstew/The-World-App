@@ -109,7 +109,7 @@ class CurrencySectionsData {
                if !remove {
                   
                   result.setValue(true, forKey: "recently_used")
-                  result.setValue(Int(NSDate().timeIntervalSince1970), forKey: "timestamp_used")
+                  result.setValue(Int64(NSDate().timeIntervalSince1970), forKey: "timestamp_used")
                   
                } else {
                   

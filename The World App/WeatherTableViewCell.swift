@@ -12,12 +12,10 @@ class WeatherTableViewCell: UITableViewCell {
 
    @IBOutlet var locationNameLabel: UILabel!
    //@IBOutlet var loadingIcon: UIActivityIndicatorView!
-   //@IBOutlet var weatherIconImage: UIImageView!
+   @IBOutlet var weatherIconImage: UIImageView!
    @IBOutlet var currentTempLabel: UILabel!
    @IBOutlet var currentWeatherDescription: UILabel!
 
-   
-   
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -53,9 +53,7 @@ class TimeZoneData {
                
             }
             
-            
          }
-         
          
       } catch {
          

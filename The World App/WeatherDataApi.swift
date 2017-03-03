@@ -65,6 +65,7 @@ class WeatherDataApi {
                                  
                                  currentWeather = wda["description"] as! String
                                  icon = wda["icon"] as! String
+                                 self.downloadIconImg(icon: icon)
                                  
                               }
                               
@@ -212,8 +213,79 @@ class WeatherDataApi {
          
       }
       
-      
-      
    }
+   
+   func downloadIconImg(icon: String) {
+      
+      print("get image")
+      
+      var success = false
+      var errorType = "generic"
+      var message = "An unknown error occurred. Please try again."
+      
+      let url = URL(string: "http://openweathermap.org/img/w/" + icon + ".png")
+      
+      print(url)
+      
+      let request = NSMutableURLRequest(url: url!)
+      
+      let task = URLSession.shared.dataTask(with: request as URLRequest) {
+         data, response, error in
+         
+         if error != nil {
+            
+            errorType = "connection_error"
+            message = "Unable to download current weather data. Please make sure The World App has access to cellular data"
+            
+            print(error!)
+            
+         } else {
+            
+            if let data = data {
+               
+               if let iconImage = UIImage(data: data) {
+                  
+                  let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+                  
+                  if documentsPath.count > 0 {
+                     
+                     let documentDirectory = documentsPath[0]
+                     
+                     let savePath = documentDirectory + "/" + icon + ".png"
+                     
+                     do {
+                        
+                        try UIImageJPEGRepresentation(iconImage, 1)?.write(to: URL(fileURLWithPath: savePath))
+                        
+                        print("Image Saved")
+                        
+                        success = true
+                        errorType = ""
+                        message = ""
+                        
+                     } catch {
+                        
+                        message = "Error saving weather icon"
+                        
+                     }
+                     
+                  }
+                  
+               }
+               
+            }
+         }
+         
+         DispatchQueue.main.sync(execute: {
+            
+            //completeHandler(success, errorType, message)
+            
+         })
+         
+      }
+      task.resume()
+   }
+    
+    
    
 }

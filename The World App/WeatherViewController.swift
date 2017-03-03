@@ -165,6 +165,34 @@ class WeatherViewController: UIViewController, UITableViewDataSource, UITableVie
       
       cell.currentTempLabel.text = String(Int(currentTemp!)) + "˚"
       
+      let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+      
+      if documentsPath.count > 0 {
+         
+         let documentDirectory = documentsPath[0]
+         
+         let restorePath = documentDirectory + "/" + (weatherInfo[tempArray[indexPath.row]]?.icon)! + ".png"
+         
+         cell.weatherIconImage.image = UIImage(contentsOfFile: restorePath)
+         
+      }
+      
+      cell.currentWeatherDescription.text = weatherInfo[tempArray[indexPath.row]]?.currentWeather
+      
+      /*WeatherDataApi().downloadIconImg(icon: (weatherInfo[tempArray[indexPath.row]]?.icon)!, completeHandler: { (success, errorType, message) in
+         
+         if success {
+            
+            print("image saved")
+            
+         }
+         
+         cell.weatherIconImage.image = UIImage(named: (self.weatherInfo[tempArray[indexPath.row]]?.icon)!)!
+         
+      })*/
+      
+      //cell.weatherIconImage.image = UIImage(named: "10d.png")
+      
       /*
        if Int(NSDate().timeIntervalSince1970) > (weatherInfo[tempArray[indexPath.row]]?.sunset)! {
        

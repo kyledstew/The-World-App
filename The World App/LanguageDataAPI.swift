@@ -98,7 +98,7 @@ class LanguageDataAPI {
          if languageName == "English" || languageName == "Japanese" {
             
             data.setValue(true, forKey: "recently_used")
-            data.setValue(Int(NSDate().timeIntervalSince1970), forKey: "Timestamp_used")
+            data.setValue(Int64(NSDate().timeIntervalSince1970), forKey: "Timestamp_used")
             
          } else {
             
